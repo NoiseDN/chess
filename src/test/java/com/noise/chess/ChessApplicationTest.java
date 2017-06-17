@@ -21,7 +21,7 @@ public class ChessApplicationTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void testJsp() {
+    public void testJsp() throws Exception {
         ResponseEntity<String> entity = restTemplate.getForEntity("/", String.class);
         
         assertThat(entity.getStatusCode()).isEqualTo(HttpStatus.OK);
