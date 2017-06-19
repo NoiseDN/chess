@@ -2,9 +2,9 @@ import webpack from 'webpack';
 import path from 'path';
 import autoprefixer from 'autoprefixer';
 
-var ChunkManifestPlugin = require("chunk-manifest-webpack-plugin");
-var WebpackChunkHash = require("webpack-chunk-hash");
-var AssetsPlugin = require("assets-webpack-plugin");
+const ChunkManifestPlugin = require("chunk-manifest-webpack-plugin");
+const WebpackChunkHash = require("webpack-chunk-hash");
+const AssetsPlugin = require("assets-webpack-plugin");
 
 const APP_PATH      = path.join(__dirname, 'src/main');
 const DIST_PATH     = path.join(APP_PATH, 'resources/static/dist');
@@ -19,6 +19,7 @@ export default {
         path: DIST_PATH,
         publicPath: '/',
         filename: '[name].js',
+        chunkFilename: '[name].js',
         sourceMapFilename: '[name].map'
     },
     resolve: {
@@ -62,7 +63,7 @@ export default {
             DEBUG: true
         }),
         // new webpack.optimize.CommonsChunkPlugin({
-        //     name: ['vendor', 'manifest'],
+        //     name: ['main'],
         //     minChunks: Infinity
         // }),
         new webpack.LoaderOptionsPlugin({
@@ -76,6 +77,6 @@ export default {
         //     filename: 'chunk-manifest.json',
         //     manifestVariable: 'webpackManifest'
         // }),
-        // new AssetsPlugin({path: DIST_PATH, includeManifest: 'manifest', fullPath: false})
+        // new AssetsPlugin({path: DIST_PATH, includeManifest: 'main', fullPath: false})
     ]
 }

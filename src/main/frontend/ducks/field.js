@@ -22,6 +22,16 @@ export function fetchField(playWhites) {
     return (dispatch) => {
         dispatch({ type: FIELD.REQUEST });
 
-        return fetch('/api/field?playWhites=' + playWhites);
+        return fetch('/api/field?playWhites=' + playWhites)
+            .catch(error => {
+                dispatch({ type: FIELD.ERROR, payload: error });
+
+                throw error;
+            })
+            .then(result => {
+                dispatch({ type: FIELD.SUCCESS, payload: result});
+
+                return result;
+            });
     };
 }
