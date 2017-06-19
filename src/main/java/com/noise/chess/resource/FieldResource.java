@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,8 +22,8 @@ public class FieldResource {
     }
 
     @RequestMapping(value = "field", method = RequestMethod.GET)
-    public FieldDTO getField() {
-        return fieldService.getField();
+    public FieldDTO getField(@RequestParam("playWhites") Boolean playWhites) {
+        return fieldService.getField(playWhites);
     }
 
     @RequestMapping(value = "field/reset", method = RequestMethod.GET)

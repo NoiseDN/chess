@@ -36,6 +36,14 @@ public final class Field {
         return instance;
     }
 
+    public static Field instance() {
+        if (instance == null) {
+            instance = new Field(true);
+        }
+
+        return instance;
+    }
+
     public Set<Figure> getPlayerFigures() {
         return PLAYER_FIGURES;
     }
@@ -51,6 +59,10 @@ public final class Field {
         playerFigures.addAll(opponentFigures);
 
         return playerFigures;
+    }
+
+    public boolean resetField() {
+        return resetField(true);
     }
 
     public boolean resetField(boolean playWhites) {

@@ -11,16 +11,14 @@ import org.springframework.stereotype.Service;
 public class FieldService {
     private final static Logger LOG = LoggerFactory.getLogger(FieldService.class);
 
-    private final static Field FIELD = Field.instance(true);
-
-    public FieldDTO getField() {
+    public FieldDTO getField(boolean playWhites) {
         LOG.info("Getting FIELD");
-        return toDto(FIELD);
+        return toDto(Field.instance(playWhites));
     }
 
     public boolean resetField() {
         LOG.info("FIELD has been reset");
-        return FIELD.resetField(true);
+        return Field.instance().resetField();
     }
 
     private FieldDTO toDto(Field field) {
