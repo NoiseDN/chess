@@ -22,7 +22,9 @@ export function fetchField(playWhites) {
     return (dispatch) => {
         dispatch({ type: FIELD.REQUEST });
 
-        return fetch('/api/field?playWhites=' + playWhites)
+        return fetch('/api/field?playWhites=' + playWhites, {
+            headers: { 'Accept': 'application/json' }
+        })
             .catch(error => {
                 dispatch({ type: FIELD.ERROR, payload: error });
 
