@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.noise.chess.core.Color.*;
 import static com.noise.chess.core.Coordinates.XCoordinate.A;
@@ -50,6 +51,10 @@ public final class Field {
 
     public Set<Figure> getOpponentFigures() {
         return OPPONENT_FIGURES;
+    }
+
+    public Set<Figure> getAllFigures() {
+        return Stream.concat(PLAYER_FIGURES.stream(), OPPONENT_FIGURES.stream()).collect(Collectors.toSet());
     }
 
     public Set<Figure> getFigures(FigureType type) {

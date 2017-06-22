@@ -1,10 +1,14 @@
 package com.noise.chess.core;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.noise.chess.serialiser.CoordinatesSerialiser;
+
 public class Figure {
     private final Color color;
     private final FigureType type;
 
     // Modifiable
+    @JsonSerialize(using = CoordinatesSerialiser.class)
     private Coordinates coordinates;
 
     private Figure(Coordinates coordinates, Color color, FigureType type) {

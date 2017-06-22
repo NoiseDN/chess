@@ -70,6 +70,6 @@ public class Coordinates {
 
     @Override
     public String toString() {
-        return "[" + x.text + ", " + y.text + "]";
+        return "[" + x.ordinal() + ", " + y.ordinal() + "]";
     }
 }

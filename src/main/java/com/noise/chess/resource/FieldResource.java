@@ -1,6 +1,6 @@
 package com.noise.chess.resource;
 
-import com.noise.chess.dto.FieldDTO;
+import com.noise.chess.core.Figure;
 import com.noise.chess.service.FieldService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "api", produces = "application/json")
@@ -22,7 +24,7 @@ public class FieldResource {
     }
 
     @RequestMapping(value = "field", method = RequestMethod.GET)
-    public FieldDTO getField(@RequestParam("playWhites") Boolean playWhites) {
+    public Set<Figure> getField(@RequestParam("playWhites") Boolean playWhites) {
         return fieldService.getField(playWhites);
     }
 

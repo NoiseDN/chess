@@ -1,5 +1,7 @@
 import React from 'react';
 
+import Field from 'components/field/Field';
+
 import './FrontPage.less';
 
 class FrontPage extends React.Component {
@@ -29,8 +31,12 @@ class FrontPage extends React.Component {
         const { field } = this.props;
         const { nickName } = this.state;
 
-        if (field) {
-            console.log(field);
+        if (!field) {
+            return (
+                <section className="front">
+                    Loading...
+                </section>
+            );
         }
 
         return (
@@ -53,6 +59,8 @@ class FrontPage extends React.Component {
                     onClick={this.startGame}>
                     Start
                 </button>
+
+                <Field figures={field} width="480" height="480"/>
 
             </section>
         );
