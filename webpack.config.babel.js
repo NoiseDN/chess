@@ -2,10 +2,6 @@ import webpack from 'webpack';
 import path from 'path';
 import autoprefixer from 'autoprefixer';
 
-const ChunkManifestPlugin = require("chunk-manifest-webpack-plugin");
-const WebpackChunkHash = require("webpack-chunk-hash");
-const AssetsPlugin = require("assets-webpack-plugin");
-
 const APP_PATH      = path.join(__dirname, 'src/main');
 const DIST_PATH     = path.join(APP_PATH, 'resources/static/dist');
 const FRONTEND_PATH = path.join(APP_PATH, 'frontend');
@@ -62,21 +58,10 @@ export default {
             },
             DEBUG: true
         }),
-        // new webpack.optimize.CommonsChunkPlugin({
-        //     name: ['main'],
-        //     minChunks: Infinity
-        // }),
         new webpack.LoaderOptionsPlugin({
             options: {
                 postcss: [autoprefixer({browsers: ['> 1%', 'last 2 versions', 'Firefox ESR', 'not ie < 10']})]
             }
         }),
-        // new webpack.HashedModuleIdsPlugin(),
-        // new WebpackChunkHash(),
-        // new ChunkManifestPlugin({
-        //     filename: 'chunk-manifest.json',
-        //     manifestVariable: 'webpackManifest'
-        // }),
-        // new AssetsPlugin({path: DIST_PATH, includeManifest: 'main', fullPath: false})
     ]
 }
