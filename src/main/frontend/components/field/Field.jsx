@@ -4,24 +4,57 @@ import Img from 'components/image/Img';
 
 import './Field.less';
 
+const CELL_COLOR = 'rgb(99, 99, 99)';
 const COORDINATES = [
     ['8', '7', '6', '5', '4', '3', '2', '1'],
     ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
 ];
+
+class Cell {
+    constructor(x, y, size, color) {
+        this.color = color;
+        this.size = size;
+        this.left = x;
+        this.right = x + size;
+        this.top = y;
+        this.bottom = y + size;
+    }
+}
 
 class Field extends React.Component {
     static propTypes = {
         figures: React.PropTypes.array.isRequired
     };
 
-    dragging = false;
+    cells = [];
+    selectedCell = null;
 
     componentDidMount() {
         this.drawCanvas();
+
+        this.initCells();
     }
 
     componentWillReceiveProps() {
         this.drawFigures();
+    }
+
+    initCells() {
+        const { field } = this.refs;
+        const blockSize = field.height / 8;
+
+        for (let x = 0; x < field.height; x += blockSize) {
+            for (let y = 0; y < field.height; y += blockSize) {
+                const xeven = x % (blockSize * 2) === 0;
+                const yeven = y % (blockSize * 2) === 0;
+
+                if ((xeven && yeven) || (!xeven && !yeven)) {
+                    this.cells.push(new Cell(x, y, blockSize, '#FFF'));
+                } else {
+                    this.cells.push(new Cell(x, y, blockSize, CELL_COLOR));
+                }
+            }
+        }
     }
 
     drawCanvas() {
@@ -32,7 +65,7 @@ class Field extends React.Component {
         const blockSize = field.height / 8;
         const doubleCell = blockSize * 2;
 
-        ctx.fillStyle = 'rgb(99, 99, 99)';
+        ctx.fillStyle = CELL_COLOR;
 
         // Draw field
         let even = true;
@@ -136,24 +169,43 @@ class Field extends React.Component {
         throw new Error('unknown figure color: ' + color);
     }
 
-    handleMouseMove = (e) => {
-        e && e.preventDefault();
+    select(cell) {
+        const { field } = this.refs;
+        const ctx = field.getContext('2d');
 
-        if (this.dragging) {
-            console.log('dragging...');
-        }
-    };
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = 'blue';
+        ctx.strokeRect(cell.left, cell.top, cell.size, cell.size);
+    }
 
-    handleMouseDown = (e) => {
-        e && e.preventDefault();
+    deselect(cell) {
+        const { field } = this.refs;
+        const ctx = field.getContext('2d');
 
-        this.dragging = true;
-    };
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = cell.color;
+        ctx.strokeRect(cell.left, cell.top, cell.size, cell.size);
+    }
 
-    handleMouseUp = (e) => {
-        e && e.preventDefault();
+    handleClick = (e) => {
+        const clickedX = e.pageX - e.target.offsetLeft;
+        const clickedY = e.pageY - e.target.offsetTop;
+        const { cells } = this;
 
-        this.dragging = false;
+        cells.map(cell => {
+            if (clickedX < cell.right && clickedX > cell.left && clickedY > cell.top && clickedY < cell.bottom) {
+                if (this.selectedCell === cell) {
+                    this.deselect(cell);
+                    this.selectedCell = null;
+                } else {
+                    if (this.selectedCell !== null) {
+                        this.deselect(this.selectedCell);
+                    }
+                    this.select(cell);
+                    this.selectedCell = cell;
+                }
+            }
+        });
     };
 
     render() {
@@ -167,9 +219,7 @@ class Field extends React.Component {
                     width={width}
                     height={height}
                     ref="field"
-                    onMouseDown={this.handleMouseDown}
-                    onMouseUp={this.handleMouseUp}
-                    onMouseMove={this.handleMouseMove}>
+                    onClick={this.handleClick}>
                 </canvas>
                 <Img onLoad={this.drawFigures} id="sprite" className="sprite" src="/assets/chess-sprite-small.png"/>
             </section>
