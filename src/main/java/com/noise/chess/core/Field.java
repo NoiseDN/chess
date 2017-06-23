@@ -77,18 +77,18 @@ public final class Field {
         return true;
     }
 
-    private static void addPlayerFigures(Color color) {
+    private static void addOpponentFigures(Color color) {
         // Rook
         PLAYER_FIGURES.add(Figure.rook(Coordinates.of(A, One), color));
         PLAYER_FIGURES.add(Figure.rook(Coordinates.of(H, One), color));
 
-        // Bishop
-        PLAYER_FIGURES.add(Figure.bishop(Coordinates.of(B, One), color));
-        PLAYER_FIGURES.add(Figure.bishop(Coordinates.of(G, One), color));
-
         // Knight
-        PLAYER_FIGURES.add(Figure.knight(Coordinates.of(C, One), color));
-        PLAYER_FIGURES.add(Figure.knight(Coordinates.of(F, One), color));
+        PLAYER_FIGURES.add(Figure.knight(Coordinates.of(B, One), color));
+        PLAYER_FIGURES.add(Figure.knight(Coordinates.of(G, One), color));
+
+        // Bishop
+        PLAYER_FIGURES.add(Figure.bishop(Coordinates.of(C, One), color));
+        PLAYER_FIGURES.add(Figure.bishop(Coordinates.of(F, One), color));
 
         // Pawns
         for (int i = 0; i < 8; i++) {
@@ -102,18 +102,18 @@ public final class Field {
         PLAYER_FIGURES.add(Figure.king(Coordinates.of(E, One), color));
     }
 
-    private static void addOpponentFigures(Color color) {
+    private static void addPlayerFigures(Color color) {
         // Rook
         OPPONENT_FIGURES.add(Figure.rook(Coordinates.of(A, Eight), color));
         OPPONENT_FIGURES.add(Figure.rook(Coordinates.of(H, Eight), color));
 
-        // Bishop
-        OPPONENT_FIGURES.add(Figure.bishop(Coordinates.of(B, Eight), color));
-        OPPONENT_FIGURES.add(Figure.bishop(Coordinates.of(G, Eight), color));
-
         // Knight
-        OPPONENT_FIGURES.add(Figure.knight(Coordinates.of(C, Eight), color));
-        OPPONENT_FIGURES.add(Figure.knight(Coordinates.of(F, Eight), color));
+        OPPONENT_FIGURES.add(Figure.knight(Coordinates.of(B, Eight), color));
+        OPPONENT_FIGURES.add(Figure.knight(Coordinates.of(G, Eight), color));
+
+        // Bishop
+        OPPONENT_FIGURES.add(Figure.bishop(Coordinates.of(C, Eight), color));
+        OPPONENT_FIGURES.add(Figure.bishop(Coordinates.of(F, Eight), color));
 
         // Pawns
         for (int i = 0; i < 8; i++) {
@@ -121,10 +121,10 @@ public final class Field {
         }
 
         // Queen
-        OPPONENT_FIGURES.add(Figure.queen(Coordinates.of(E, Eight), color));
+        OPPONENT_FIGURES.add(Figure.queen(Coordinates.of(D, Eight), color));
 
         // King
-        OPPONENT_FIGURES.add(Figure.king(Coordinates.of(D, Eight), color));
+        OPPONENT_FIGURES.add(Figure.king(Coordinates.of(E, Eight), color));
     }
 
     public Map<Coordinates, Figure> getFigureMapping() {

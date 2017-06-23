@@ -80,54 +80,17 @@ class Field extends React.Component {
     }
 
     drawFigures = () => {
-        // const { field } = this.refs;
         const { figures } = this.props;
 
         if (!figures) {
             return false;
         }
 
-        console.log('drawing figures...');
-
-        // const ctx = field.getContext('2d');
-        // const sprite = document.getElementById('sprite');
-
-        // const s = field.height / 8;
-        // const s2 = s * 2, s3 = s * 3, s4 = s * 4, s5 = s * 5, s6 = s * 6, s7 = s * 7;
-
         figures.map(figure => {
             const { figureType, color, coordinates } = figure;
 
             this.drawFigure(figureType, color, coordinates[0], coordinates[1]);
         });
-
-        // // black coords                    x   y  w  h
-        // ctx.drawImage(sprite, s4, s, s, s, 0,  0, s, s); // black rook left
-        // ctx.drawImage(sprite, s4, s, s, s, s7, 0, s, s); // black rook right
-        // ctx.drawImage(sprite, s3, s, s, s, s,  0, s, s); // black knight left
-        // ctx.drawImage(sprite, s3, s, s, s, s6, 0, s, s); // black knight right
-        // ctx.drawImage(sprite, s2, s, s, s, s2, 0, s, s); // black bishop left
-        // ctx.drawImage(sprite, s2, s, s, s, s5, 0, s, s); // black bishop right
-        // ctx.drawImage(sprite, s,  s, s, s, s3, 0, s, s); // black queen
-        // ctx.drawImage(sprite, 0,  s, s, s, s4, 0, s, s); // black king
-        //
-        // for (let i = 0; i < 8; i++) {
-        //     ctx.drawImage(sprite, s5, s, s, s, s * i, s, s, s); // black pawn
-        // }
-        //
-        // // black coords                    x   y   w  h
-        // ctx.drawImage(sprite, s4, 0, s, s, 0,  s7, s, s); // white rook left
-        // ctx.drawImage(sprite, s4, 0, s, s, s7, s7, s, s); // white rook right
-        // ctx.drawImage(sprite, s3, 0, s, s, s,  s7, s, s); // white knight left
-        // ctx.drawImage(sprite, s3, 0, s, s, s6, s7, s, s); // white knight right
-        // ctx.drawImage(sprite, s2, 0, s, s, s2, s7, s, s); // white bishop left
-        // ctx.drawImage(sprite, s2, 0, s, s, s5, s7, s, s); // white bishop right
-        // ctx.drawImage(sprite, s,  0, s, s, s3, s7, s, s); // white queen
-        // ctx.drawImage(sprite, 0,  0, s, s, s4, s7, s, s); // white king
-        //
-        // for (let i = 0; i < 8; i++) {
-        //     ctx.drawImage(sprite, s5, 0, s, s, s * i, s6, s, s); // white pawn
-        // }
     };
 
     drawFigure(type, color, x, y) {
