@@ -1,14 +1,23 @@
 package com.noise.chess.core;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.noise.chess.serialiser.CoordinatesDeserialiser;
+import com.noise.chess.serialiser.CoordinatesSerialiser;
+
 import java.util.stream.Stream;
 
+import static java.util.Objects.requireNonNull;
+
+@JsonSerialize(using = CoordinatesSerialiser.class)
+@JsonDeserialize(using = CoordinatesDeserialiser.class)
 public class Coordinates {
     private final XCoordinate x;
     private final YCoordinate y;
 
     private Coordinates(XCoordinate x, YCoordinate y) {
-        this.x = x;
-        this.y = y;
+        this.x = requireNonNull(x, "x coordinate cannot be null");
+        this.y = requireNonNull(y, "y coordinate cannot be null");
     }
 
     public static Coordinates of(XCoordinate x, YCoordinate y) {

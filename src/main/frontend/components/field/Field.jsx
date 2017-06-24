@@ -6,6 +6,7 @@ import './Field.less';
 
 const CELL_COLOR = 'rgb(99, 99, 99)';
 const SELECTION_COLOR = 'rgba(163, 233, 255, 0.5)';
+const POSSIBLE_MOVE_COLOR = 'rgba(255, 233, 163, 0.5)';
 const COORDINATES = [
     ['8', '7', '6', '5', '4', '3', '2', '1'],
     ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
@@ -19,16 +20,20 @@ class Cell {
         this.right = x + size;
         this.top = y;
         this.bottom = y + size;
+        this.coordinates = [x / size, y / size];
     }
 }
 
 class Field extends React.Component {
     static propTypes = {
-        figures: React.PropTypes.array.isRequired
+        figures: React.PropTypes.array.isRequired,
+        getPossibleMoves: React.PropTypes.func.isRequired,
+        moves: React.PropTypes.array
     };
 
     cells = [];
     selectedCell = null;
+    moves = null;
 
     componentDidMount() {
         this.drawCanvas();
@@ -36,13 +41,21 @@ class Field extends React.Component {
         this.initCells();
     }
 
-    componentWillReceiveProps() {
-        this.reRender();
+    componentWillReceiveProps(nextProps) {
+        const { moves: nextMoves } = nextProps;
+        const { moves: currentMoves } = this.props;
+
+        if (nextMoves !== currentMoves) {
+            this.moves = nextMoves;
+            this.reRender();
+        }
     }
 
     reRender() {
         this.drawCanvas();
         this.drawFigures();
+
+        console.log('Canvas re-rendered');
     }
 
     initCells() {
@@ -103,6 +116,18 @@ class Field extends React.Component {
             ctx.fillRect(cell.left, cell.top, cell.size, cell.size);
         }
 
+        // Draw possible moves
+        const { moves } = this;
+
+        if (moves && moves.length > 0) {
+            moves.map(move => {
+                const cell = this.getCellAt(move);
+
+                ctx.fillStyle = POSSIBLE_MOVE_COLOR;
+                ctx.fillRect(cell.left, cell.top, cell.size, cell.size);
+            });
+        }
+
         // Draw coordinates
         ctx.font = '12px Courier New';
         const center = 5;
@@ -127,6 +152,42 @@ class Field extends React.Component {
                 }
             }
         }
+    }
+
+    getFigureAt(cellCoordinates) {
+        const { figures } = this.props;
+
+        if (!figures) {
+            return false;
+        }
+
+        for (let i = 0; i < figures.length; i++) {
+            const { coordinates } = figures[i];
+
+            if (coordinates[0] === cellCoordinates[0] && coordinates[1] === cellCoordinates[1]) {
+                return figures[i];
+            }
+        }
+
+        return false;
+    }
+
+    getCellAt(cellCoordinates) {
+        const { cells } = this;
+
+        if (!cells) {
+            return false;
+        }
+
+        for (let i = 0; i < cells.length; i++) {
+            const { coordinates } = cells[i];
+
+            if (coordinates[0] === cellCoordinates[0] && coordinates[1] === cellCoordinates[1]) {
+                return cells[i];
+            }
+        }
+
+        return false;
     }
 
     drawFigures = () => {
@@ -186,24 +247,6 @@ class Field extends React.Component {
         throw new Error('unknown figure color: ' + color);
     }
 
-    select(cell) {
-        const { field } = this.refs;
-        const ctx = field.getContext('2d');
-
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = 'blue';
-        ctx.strokeRect(cell.left, cell.top, cell.size, cell.size);
-    }
-
-    deselect(cell) {
-        const { field } = this.refs;
-        const ctx = field.getContext('2d');
-
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = cell.color;
-        ctx.strokeRect(cell.left, cell.top, cell.size, cell.size);
-    }
-
     handleClick = (e) => {
         const clickedX = e.pageX - e.target.offsetLeft;
         const clickedY = e.pageY - e.target.offsetTop;
@@ -213,10 +256,20 @@ class Field extends React.Component {
             if (clickedX < cell.right && clickedX > cell.left && clickedY > cell.top && clickedY < cell.bottom) {
                 if (this.selectedCell === cell) {
                     this.selectedCell = null;
+                    this.moves = null;
+                    this.reRender();
                 } else {
-                    this.selectedCell = cell;
+                    const figure = this.getFigureAt(cell.coordinates);
+
+                    //TODO: check if selected figure is PLAYER's or OPPONENT's
+                    if (figure) {
+                        this.selectedCell = cell;
+
+                        const { getPossibleMoves } = this.props;
+
+                        getPossibleMoves && getPossibleMoves(figure);
+                    }
                 }
-                this.reRender();
             }
         });
     };

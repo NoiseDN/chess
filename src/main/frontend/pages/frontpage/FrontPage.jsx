@@ -28,7 +28,7 @@ class FrontPage extends React.Component {
     };
 
     render() {
-        const { field } = this.props;
+        const { field, getPossibleMoves, moves } = this.props;
         // const { nickName } = this.state;
 
         if (!field) {
@@ -64,7 +64,12 @@ class FrontPage extends React.Component {
 
                 */}
 
-                <Field figures={field} width="480" height="480"/>
+                <Field
+                    figures={field}
+                    getPossibleMoves={getPossibleMoves}
+                    moves={moves}
+                    width="480"
+                    height="480"/>
 
             </section>
         );

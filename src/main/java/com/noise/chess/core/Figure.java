@@ -1,20 +1,21 @@
 package com.noise.chess.core;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.noise.chess.serialiser.CoordinatesSerialiser;
-
 public class Figure {
     private final Color color;
-    private final FigureType type;
+    private final FigureType figureType;
 
     // Modifiable
-    @JsonSerialize(using = CoordinatesSerialiser.class)
     private Coordinates coordinates;
 
-    private Figure(Coordinates coordinates, Color color, FigureType type) {
+    private Figure() {
+        this.color = null;
+        this.figureType = null;
+    }
+
+    private Figure(Coordinates coordinates, Color color, FigureType figureType) {
         this.coordinates = coordinates;
         this.color = color;
-        this.type = type;
+        this.figureType = figureType;
     }
 
     public static Figure bishop(Coordinates coordinates, Color color) {
@@ -54,10 +55,10 @@ public class Figure {
     }
 
     public FigureType getFigureType() {
-        return type;
+        return figureType;
     }
 
     public String toString() {
-        return color + " " + type + " at " + coordinates;
+        return color + " " + figureType + " at " + coordinates;
     }
 }

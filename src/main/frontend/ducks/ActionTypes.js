@@ -7,5 +7,6 @@ function createSymbols(entity) {
 }
 
 module.exports = {
-    FIELD : createSymbols('Field')
+    FIELD : createSymbols('Field'),
+    MOVES : createSymbols('Moves')
 };

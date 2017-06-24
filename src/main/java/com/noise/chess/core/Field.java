@@ -22,10 +22,13 @@ import static com.noise.chess.core.Coordinates.YCoordinate.*;
 public final class Field {
     private static Field instance;
 
+    private final boolean playWhites;
+
     private final static Set<Figure> PLAYER_FIGURES = new HashSet<>();
     private final static Set<Figure> OPPONENT_FIGURES = new HashSet<>();
 
     private Field(boolean playWhites) {
+        this.playWhites = playWhites;
         resetField(playWhites);
     }
 
@@ -43,6 +46,10 @@ public final class Field {
         }
 
         return instance;
+    }
+
+    public boolean isPlayWhites() {
+        return playWhites;
     }
 
     public Set<Figure> getPlayerFigures() {
