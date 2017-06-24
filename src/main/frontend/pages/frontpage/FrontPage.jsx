@@ -29,7 +29,7 @@ class FrontPage extends React.Component {
 
     render() {
         const { field } = this.props;
-        const { nickName } = this.state;
+        // const { nickName } = this.state;
 
         if (!field) {
             return (
@@ -46,6 +46,8 @@ class FrontPage extends React.Component {
                     by Anton Filimonov
                 </p>
 
+                {/*
+
                 <label htmlFor="nick-name">Name</label>
                 <input
                     type="text"
@@ -59,6 +61,8 @@ class FrontPage extends React.Component {
                     onClick={this.startGame}>
                     Start
                 </button>
+
+                */}
 
                 <Field figures={field} width="480" height="480"/>
 

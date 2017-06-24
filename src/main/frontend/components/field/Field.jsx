@@ -5,6 +5,7 @@ import Img from 'components/image/Img';
 import './Field.less';
 
 const CELL_COLOR = 'rgb(99, 99, 99)';
+const SELECTION_COLOR = 'rgba(163, 233, 255, 0.5)';
 const COORDINATES = [
     ['8', '7', '6', '5', '4', '3', '2', '1'],
     ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
@@ -36,6 +37,11 @@ class Field extends React.Component {
     }
 
     componentWillReceiveProps() {
+        this.reRender();
+    }
+
+    reRender() {
+        this.drawCanvas();
         this.drawFigures();
     }
 
@@ -62,6 +68,9 @@ class Field extends React.Component {
 
         const ctx = field.getContext('2d');
 
+        // Reset canvas
+        ctx.clearRect(0, 0, field.width, field.height);
+
         const blockSize = field.height / 8;
         const doubleCell = blockSize * 2;
 
@@ -84,6 +93,14 @@ class Field extends React.Component {
                 }
                 even = true;
             }
+        }
+
+        // Draw selection
+        const { selectedCell : cell } = this;
+
+        if (cell !== null) {
+            ctx.fillStyle = SELECTION_COLOR;
+            ctx.fillRect(cell.left, cell.top, cell.size, cell.size);
         }
 
         // Draw coordinates
@@ -195,15 +212,11 @@ class Field extends React.Component {
         cells.map(cell => {
             if (clickedX < cell.right && clickedX > cell.left && clickedY > cell.top && clickedY < cell.bottom) {
                 if (this.selectedCell === cell) {
-                    this.deselect(cell);
                     this.selectedCell = null;
                 } else {
-                    if (this.selectedCell !== null) {
-                        this.deselect(this.selectedCell);
-                    }
-                    this.select(cell);
                     this.selectedCell = cell;
                 }
+                this.reRender();
             }
         });
     };
