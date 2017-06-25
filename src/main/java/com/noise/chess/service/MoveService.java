@@ -1,23 +1,25 @@
 package com.noise.chess.service;
 
 import com.noise.chess.core.Coordinates;
-import com.noise.chess.core.Coordinates.YCoordinate;
-import com.noise.chess.core.Coordinates.XCoordinate;
 import com.noise.chess.core.Figure;
 
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
+
+import static com.noise.chess.core.Coordinates.X;
+import static com.noise.chess.core.Coordinates.Y;
+import static com.noise.chess.core.Coordinates.of;
 
 @Service
 public class MoveService {
-    public List<Coordinates> getPossibleMoves(Figure figure) {
+    public Set<Coordinates> getPossibleMoves(Figure figure) {
         switch (figure.getFigureType()) {
             case King:
                 return getKingMoves(figure.getCoordinates());
-//            case Queen:
-//                return getQueenMoves(figure.getColor(), figure.getCoordinates());
+            case Queen:
+                return getQueenMoves(figure.getCoordinates());
 //            case Bishop:
 //                return getBishopMoves(figure.getColor(), figure.getCoordinates());
 //            case Knight:
@@ -31,21 +33,47 @@ public class MoveService {
         }
     }
 
-    private List<Coordinates> getKingMoves(Coordinates coordinates) {
-        List<Coordinates> kingMoves = new ArrayList<>(8);
+    private Set<Coordinates> getQueenMoves(Coordinates coordinates) {
+        Set<Coordinates> queenMoves = new HashSet<>();
 
-        int X = coordinates.getX().ordinal();
-        int Y = coordinates.getY().ordinal();
+        int x = coordinates.getX().ordinal();
+        int y = coordinates.getY().ordinal();
 
-        try { kingMoves.add(Coordinates.of(XCoordinate.get(X + 1),    YCoordinate.get(Y + 1))); } catch (RuntimeException e) { /* swallow */ }
-        try { kingMoves.add(Coordinates.of(XCoordinate.get(X + 1),    YCoordinate.get(Y)));     } catch (RuntimeException e) { /* swallow */ }
-        try { kingMoves.add(Coordinates.of(XCoordinate.get(X + 1),    YCoordinate.get(Y - 1))); } catch (RuntimeException e) { /* swallow */ }
-        try { kingMoves.add(Coordinates.of(XCoordinate.get(X),        YCoordinate.get(Y + 1))); } catch (RuntimeException e) { /* swallow */ }
-        try { kingMoves.add(Coordinates.of(XCoordinate.get(X),        YCoordinate.get(Y - 1))); } catch (RuntimeException e) { /* swallow */ }
-        try { kingMoves.add(Coordinates.of(XCoordinate.get(X - 1),    YCoordinate.get(Y - 1))); } catch (RuntimeException e) { /* swallow */ }
-        try { kingMoves.add(Coordinates.of(XCoordinate.get(X - 1),    YCoordinate.get(Y)));     } catch (RuntimeException e) { /* swallow */ }
-        try { kingMoves.add(Coordinates.of(XCoordinate.get(X - 1),    YCoordinate.get(Y + 1))); } catch (RuntimeException e) { /* swallow */ }
+        for (int i = 1; i < 8; i++) {
+            add(queenMoves, of(X.of(x + i), Y.of(y + i)));
+            add(queenMoves, of(X.of(x + i), Y.of(y)));
+            add(queenMoves, of(X.of(x + i), Y.of(y - i)));
+            add(queenMoves, of(X.of(x),     Y.of(y + i)));
+            add(queenMoves, of(X.of(x),     Y.of(y - i)));
+            add(queenMoves, of(X.of(x - i), Y.of(y - i)));
+            add(queenMoves, of(X.of(x - i), Y.of(y)));
+            add(queenMoves, of(X.of(x - i), Y.of(y + i)));
+        }
+
+        return queenMoves;
+    }
+
+    private Set<Coordinates> getKingMoves(Coordinates coordinates) {
+        Set<Coordinates> kingMoves = new HashSet<>(8);
+
+        int x = coordinates.getX().ordinal();
+        int y = coordinates.getY().ordinal();
+
+        add(kingMoves, of(X.of(x + 1), Y.of(y + 1)));
+        add(kingMoves, of(X.of(x + 1), Y.of(y)));
+        add(kingMoves, of(X.of(x + 1), Y.of(y - 1)));
+        add(kingMoves, of(X.of(x),     Y.of(y + 1)));
+        add(kingMoves, of(X.of(x),     Y.of(y - 1)));
+        add(kingMoves, of(X.of(x - 1), Y.of(y - 1)));
+        add(kingMoves, of(X.of(x - 1), Y.of(y)));
+        add(kingMoves, of(X.of(x - 1), Y.of(y + 1)));
 
         return kingMoves;
+    }
+
+    private void add(Set<Coordinates> moves, Coordinates coordinates) {
+        if (coordinates.getX() != null && coordinates.getY() != null) {
+            moves.add(coordinates);
+        }
     }
 }

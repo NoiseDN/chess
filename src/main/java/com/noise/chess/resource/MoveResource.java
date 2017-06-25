@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "api", produces = "application/json")
@@ -24,7 +24,7 @@ public class MoveResource {
     }
 
     @RequestMapping(value = "moves", method = RequestMethod.POST)
-    public List<Coordinates> getPossibleMoves(@RequestBody Figure figure) {
+    public Set<Coordinates> getPossibleMoves(@RequestBody Figure figure) {
         return moveService.getPossibleMoves(figure);
     }
 }

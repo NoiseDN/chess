@@ -7,32 +7,30 @@ import com.noise.chess.serialiser.CoordinatesSerialiser;
 
 import java.util.stream.Stream;
 
-import static java.util.Objects.requireNonNull;
-
 @JsonSerialize(using = CoordinatesSerialiser.class)
 @JsonDeserialize(using = CoordinatesDeserialiser.class)
 public class Coordinates {
-    private final XCoordinate x;
-    private final YCoordinate y;
+    private final X x;
+    private final Y y;
 
-    private Coordinates(XCoordinate x, YCoordinate y) {
-        this.x = requireNonNull(x, "x coordinate cannot be null");
-        this.y = requireNonNull(y, "y coordinate cannot be null");
+    private Coordinates(X x, Y y) {
+        this.x = x;
+        this.y = y;
     }
 
-    public static Coordinates of(XCoordinate x, YCoordinate y) {
+    public static Coordinates of(X x, Y y) {
         return new Coordinates(x, y);
     }
 
-    public XCoordinate getX() {
+    public X getX() {
         return x;
     }
 
-    public YCoordinate getY() {
+    public Y getY() {
         return y;
     }
 
-    public static enum XCoordinate {
+    public enum X {
         A("A"),
         B("B"),
         C("C"),
@@ -44,18 +42,18 @@ public class Coordinates {
 
         final String text;
 
-        XCoordinate(String text) {
+        X(String text) {
             this.text = text;
         }
 
-        public static XCoordinate get(int index) {
-            return Stream.of(XCoordinate.values()).filter(c -> c.ordinal() == index)
+        public static X of(int index) {
+            return Stream.of(X.values()).filter(c -> c.ordinal() == index)
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("Could not get X coordinate for index " + index));
+                .orElse(null);
         }
     }
 
-    public static enum YCoordinate {
+    public enum Y {
         One("1"),
         Two("2"),
         Three("3"),
@@ -67,13 +65,14 @@ public class Coordinates {
 
         final String text;
 
-        YCoordinate(String text) {
+        Y(String text) {
             this.text = text;
         }
 
-        public static YCoordinate get(int index) {
-            return Stream.of(YCoordinate.values()).filter(c -> c.ordinal() == index).findFirst()
-                .orElseThrow(() -> new RuntimeException("Could not get Y coordinate for index " + index));
+        public static Y of(int index) {
+            return Stream.of(Y.values()).filter(c -> c.ordinal() == index)
+                .findFirst()
+                .orElse(null);
         }
     }
 

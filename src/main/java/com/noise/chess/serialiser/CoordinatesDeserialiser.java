@@ -22,7 +22,7 @@ public class CoordinatesDeserialiser extends JsonDeserializer<Coordinates> {
             Integer x = arrayNode.get(0).asInt();
             Integer y = arrayNode.get(1).asInt();
 
-            return Coordinates.of(Coordinates.XCoordinate.get(x), Coordinates.YCoordinate.get(y));
+            return Coordinates.of(Coordinates.X.of(x), Coordinates.Y.of(y));
         }
 
         throw new JsonParseException(jsonParser, "Could not parse array of 'coordinates'");

@@ -8,16 +8,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static com.noise.chess.core.Color.*;
-import static com.noise.chess.core.Coordinates.XCoordinate.A;
-import static com.noise.chess.core.Coordinates.XCoordinate.B;
-import static com.noise.chess.core.Coordinates.XCoordinate.C;
-import static com.noise.chess.core.Coordinates.XCoordinate.D;
-import static com.noise.chess.core.Coordinates.XCoordinate.E;
-import static com.noise.chess.core.Coordinates.XCoordinate.F;
-import static com.noise.chess.core.Coordinates.XCoordinate.G;
-import static com.noise.chess.core.Coordinates.XCoordinate.H;
-import static com.noise.chess.core.Coordinates.XCoordinate.get;
-import static com.noise.chess.core.Coordinates.YCoordinate.*;
+import static com.noise.chess.core.Coordinates.X.*;
+import static com.noise.chess.core.Coordinates.X;
+import static com.noise.chess.core.Coordinates.Y.*;
 
 public final class Field {
     private static Field instance;
@@ -99,7 +92,7 @@ public final class Field {
 
         // Pawns
         for (int i = 0; i < 8; i++) {
-            PLAYER_FIGURES.add(Figure.pawn(Coordinates.of(get(i), Two), color));
+            PLAYER_FIGURES.add(Figure.pawn(Coordinates.of(X.of(i), Two), color));
         }
 
         // Queen
@@ -124,7 +117,7 @@ public final class Field {
 
         // Pawns
         for (int i = 0; i < 8; i++) {
-            OPPONENT_FIGURES.add(Figure.pawn(Coordinates.of(get(i), Seven), color));
+            OPPONENT_FIGURES.add(Figure.pawn(Coordinates.of(X.of(i), Seven), color));
         }
 
         // Queen
