@@ -1,5 +1,6 @@
 package com.noise.chess.service;
 
+import com.noise.chess.core.Color;
 import com.noise.chess.core.Coordinates;
 import com.noise.chess.core.Figure;
 
@@ -26,11 +27,33 @@ public class MoveService {
                 return getKnightMoves(figure.getCoordinates());
             case Rook:
                 return getRookMoves(figure.getCoordinates());
-//            case Pawn:
-//                return getPawnMoves(figure.getColor(), figure.getCoordinates());
+            case Pawn:
+                return getPawnMoves(figure.getColor(), figure.getCoordinates());
             default:
                 throw new RuntimeException("Unknown figure type " + figure.getFigureType());
         }
+    }
+
+    private Set<Coordinates> getPawnMoves(Color color, Coordinates coordinates) {
+        Set<Coordinates> pawnMoves = new HashSet<>();
+
+        int x = coordinates.getX().ordinal();
+        int y = coordinates.getY().ordinal();
+
+        switch (color) {
+            case WHITE:
+                add(pawnMoves, of(X.of(x), Y.of(y - 1)));
+                add(pawnMoves, of(X.of(x), Y.of(y - 2)));
+                break;
+            case BLACK:
+                add(pawnMoves, of(X.of(x), Y.of(y + 1)));
+                add(pawnMoves, of(X.of(x), Y.of(y + 2)));
+                break;
+            default:
+                throw new RuntimeException("Unknown color " + color);
+        }
+
+        return pawnMoves;
     }
 
     private Set<Coordinates> getRookMoves(Coordinates coordinates) {
