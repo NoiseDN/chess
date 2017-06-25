@@ -20,8 +20,8 @@ public class MoveService {
                 return getKingMoves(figure.getCoordinates());
             case Queen:
                 return getQueenMoves(figure.getCoordinates());
-//            case Bishop:
-//                return getBishopMoves(figure.getColor(), figure.getCoordinates());
+            case Bishop:
+                return getBishopMoves(figure.getCoordinates());
 //            case Knight:
 //                return getKnightMoves(figure.getColor(), figure.getCoordinates());
 //            case Rook:
@@ -31,6 +31,22 @@ public class MoveService {
             default:
                 throw new RuntimeException("Unknown figure type " + figure.getFigureType());
         }
+    }
+
+    private Set<Coordinates> getBishopMoves(Coordinates coordinates) {
+        Set<Coordinates> bishopMoves = new HashSet<>();
+
+        int x = coordinates.getX().ordinal();
+        int y = coordinates.getY().ordinal();
+
+        for (int i = 1; i < 8; i++) {
+            add(bishopMoves, of(X.of(x + i), Y.of(y + i)));
+            add(bishopMoves, of(X.of(x + i), Y.of(y - i)));
+            add(bishopMoves, of(X.of(x - i), Y.of(y - i)));
+            add(bishopMoves, of(X.of(x - i), Y.of(y + i)));
+        }
+        
+        return bishopMoves;
     }
 
     private Set<Coordinates> getQueenMoves(Coordinates coordinates) {
