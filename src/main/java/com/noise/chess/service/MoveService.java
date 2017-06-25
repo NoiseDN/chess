@@ -24,13 +24,29 @@ public class MoveService {
                 return getBishopMoves(figure.getCoordinates());
             case Knight:
                 return getKnightMoves(figure.getCoordinates());
-//            case Rook:
-//                return getRookMoves(figure.getColor(), figure.getCoordinates());
+            case Rook:
+                return getRookMoves(figure.getCoordinates());
 //            case Pawn:
 //                return getPawnMoves(figure.getColor(), figure.getCoordinates());
             default:
                 throw new RuntimeException("Unknown figure type " + figure.getFigureType());
         }
+    }
+
+    private Set<Coordinates> getRookMoves(Coordinates coordinates) {
+        Set<Coordinates> rookMoves = new HashSet<>();
+
+        int x = coordinates.getX().ordinal();
+        int y = coordinates.getY().ordinal();
+
+        for (int i = 1; i < 8; i++) {
+            add(rookMoves, of(X.of(x), Y.of(y + i)));
+            add(rookMoves, of(X.of(x + i), Y.of(y)));
+            add(rookMoves, of(X.of(x), Y.of(y - i)));
+            add(rookMoves, of(X.of(x - i), Y.of(y)));
+        }
+
+        return rookMoves;
     }
 
     private Set<Coordinates> getKnightMoves(Coordinates coordinates) {
