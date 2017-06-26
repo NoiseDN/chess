@@ -17,6 +17,10 @@ public class FieldService {
         return Field.instance(playWhites).getAllFigures();
     }
 
+    public Set<Figure> getField() {
+        return Field.instance().getAllFigures();
+    }
+
     public boolean resetField() {
         LOG.info("FIELD has been reset");
         return Field.instance().resetField();
