@@ -1,4 +1,4 @@
-package com.noise.chess.core;
+package com.noise.chess.domain;
 
 public enum Color {
     BLACK("Black"),

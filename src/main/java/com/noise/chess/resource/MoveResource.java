@@ -1,10 +1,11 @@
 package com.noise.chess.resource;
 
-import com.noise.chess.core.Coordinates;
-import com.noise.chess.core.Figure;
+import com.noise.chess.domain.Coordinates;
+import com.noise.chess.domain.Figure;
 import com.noise.chess.service.MoveService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,8 +24,9 @@ public class MoveResource {
         this.moveService = moveService;
     }
 
-    @RequestMapping(value = "moves", method = RequestMethod.POST)
-    public Set<Coordinates> getPossibleMoves(@RequestBody Figure figure) {
-        return moveService.getPossibleMoves(figure);
+    @RequestMapping(value = "moves/{fieldId}", method = RequestMethod.POST)
+    public Set<Coordinates> getPossibleMoves(@PathVariable Long fieldId,
+                                             @RequestBody Figure figure) {
+        return moveService.getPossibleMoves(fieldId, figure);
     }
 }

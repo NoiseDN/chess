@@ -3,7 +3,7 @@ package com.noise.chess.serialiser;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.noise.chess.core.Coordinates;
+import com.noise.chess.domain.Coordinates;
 
 import java.io.IOException;
 

@@ -18,11 +18,11 @@ export default function moves(state = null, action) {
 
 import fetch from 'utils/fetch';
 
-export function getPossibleMoves(figure) {
+export function getPossibleMoves(fieldId, figure) {
     return (dispatch) => {
         dispatch({ type: MOVES.REQUEST });
 
-        return fetch('/api/moves', {
+        return fetch(`/api/moves/${fieldId}`, {
             method: 'POST',
             headers: { 'Accept': 'application/json' },
             body: JSON.stringify(figure)

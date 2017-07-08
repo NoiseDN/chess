@@ -1,17 +1,17 @@
 package com.noise.chess.resource;
 
-import com.noise.chess.core.Figure;
+import com.noise.chess.domain.Field;
 import com.noise.chess.service.FieldService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "api", produces = "application/json")
@@ -23,18 +23,20 @@ public class FieldResource {
         this.fieldService = fieldService;
     }
 
-    @RequestMapping(value = "field", method = RequestMethod.GET)
-    public Set<Figure> getField(@RequestParam("playWhites") Boolean playWhites) {
-        return fieldService.getField(playWhites);
+    @RequestMapping(value = "field/{color}", method = RequestMethod.POST)
+    public Field createField(@PathVariable("color") String color) {
+        return fieldService.createField(color.equals("white"));
     }
 
-    @RequestMapping(value = "field/reset", method = RequestMethod.GET)
-    public ResponseEntity resetField() {
+    @RequestMapping(value = "field", method = RequestMethod.GET)
+    public List<Field> getFields() {
+        return fieldService.getFields();
+    }
 
-        if (fieldService.resetField()) {
-            return ResponseEntity.ok("FIELD has been reset");
-        }
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    @RequestMapping(value = "field/{id}", method = RequestMethod.GET)
+    public ResponseEntity getField(@PathVariable Long id) {
+        return fieldService.getField(id)
+            .<ResponseEntity>map(ResponseEntity::ok)
+            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
     }
 }

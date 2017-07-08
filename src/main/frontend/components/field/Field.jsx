@@ -26,6 +26,7 @@ class Cell {
 
 class Field extends React.Component {
     static propTypes = {
+        id: React.PropTypes.number.isRequired,
         figures: React.PropTypes.array.isRequired,
         getPossibleMoves: React.PropTypes.func.isRequired,
         moves: React.PropTypes.array
@@ -265,9 +266,9 @@ class Field extends React.Component {
                     if (figure) {
                         this.selectedCell = cell;
 
-                        const { getPossibleMoves } = this.props;
+                        const { getPossibleMoves, id } = this.props;
 
-                        getPossibleMoves && getPossibleMoves(figure);
+                        getPossibleMoves && getPossibleMoves(id, figure);
                     }
                 }
             }

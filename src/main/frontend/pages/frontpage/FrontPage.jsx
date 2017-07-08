@@ -1,43 +1,40 @@
 import React from 'react';
-
-import Field from 'components/field/Field';
+import { Link, browserHistory } from 'react-router';
 
 import './FrontPage.less';
 
 class FrontPage extends React.Component {
-    state = {
-        nickName: ''
-    };
-
     componentWillMount() {
-        const { fetchField } = this.props;
+        const { fetchFields } = this.props;
 
-        fetchField && fetchField(true);
+        fetchFields && fetchFields();
     }
 
-    handleNickNameChange = (e) => {
-        this.setState({
-            nickName: e.target.value
-        });
+    componentWillReceiveProps(nextProps) {
+        const { field } = nextProps;
+
+        if (field && field.id) {
+            browserHistory.push(`/game/${field.id}`);
+        }
+    }
+
+    startNewGame = () => {
+        const { createField } = this.props;
+
+        createField && createField(true);
     };
 
-    startGame = () => {
-        const { nickName } = this.state;
-
-        console.log('Game has started for ' + nickName);
+    toSavedGame = (field, index) => {
+        return (
+            <Link key={index} to={`/game/${field.id}`} className="saved-game">
+                { field.id }
+            </Link>
+        );
     };
 
     render() {
-        const { field, getPossibleMoves, moves } = this.props;
+        const { fields } = this.props;
         // const { nickName } = this.state;
-
-        if (!field) {
-            return (
-                <section className="front">
-                    Loading...
-                </section>
-            );
-        }
 
         return (
             <section className="front">
@@ -46,30 +43,29 @@ class FrontPage extends React.Component {
                     by Anton Filimonov
                 </p>
 
-                {/*
+                <section className="new-game">
+                    <h3>Start a new game</h3>
+                    {/*<label htmlFor="nick-name">Name</label>*/}
+                    {/*<input*/}
+                        {/*type="text"*/}
+                        {/*id="nick-name"*/}
+                        {/*className="nick-name"*/}
+                        {/*value={nickName}*/}
+                        {/*onChange={this.handleNickNameChange} />*/}
 
-                <label htmlFor="nick-name">Name</label>
-                <input
-                    type="text"
-                    id="nick-name"
-                    className="nick-name"
-                    value={nickName}
-                    onChange={this.handleNickNameChange} />
+                    <button
+                        className="start-game"
+                        onClick={this.startNewGame}>
+                        Start New Game
+                    </button>
+                </section>
 
-                <button
-                    className="start-game"
-                    onClick={this.startGame}>
-                    Start
-                </button>
-
-                */}
-
-                <Field
-                    figures={field}
-                    getPossibleMoves={getPossibleMoves}
-                    moves={moves}
-                    width="480"
-                    height="480"/>
+                { fields &&
+                    <section className="load-game">
+                        <h3>Load saved game</h3>
+                        { fields.map(this.toSavedGame) }
+                    </section>
+                }
 
             </section>
         );

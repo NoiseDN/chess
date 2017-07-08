@@ -1,4 +1,4 @@
-package com.noise.chess.core;
+package com.noise.chess.domain;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -78,6 +78,6 @@ public class Coordinates {
 
     @Override
     public String toString() {
-        return "[" + x.ordinal() + ", " + y.ordinal() + "]";
+        return x.ordinal() + "," + y.ordinal();
     }
 }

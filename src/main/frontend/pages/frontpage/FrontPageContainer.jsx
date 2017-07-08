@@ -1,16 +1,16 @@
 import { connect } from 'react-redux';
 
 import FrontPage from './FrontPage';
-import { fetchField } from 'ducks/field';
-import { getPossibleMoves } from 'ducks/moves';
+import { fetchFields } from 'ducks/fields';
+import { createField } from 'ducks/field';
 
-const mapStateToProps = ({ field, moves }) => ({
-    field, moves
+const mapStateToProps = ({ fields, field }) => ({
+    fields, field
 });
 
 const mapDispatchToProps = (dispatch) => ({
-    fetchField: (playWhites) => dispatch(fetchField(playWhites)),
-    getPossibleMoves: (figure) => dispatch(getPossibleMoves(figure))
+    fetchFields: () => dispatch(fetchFields()),
+    createField: (playWhites) => dispatch(createField(playWhites))
 });
 
 export default connect(

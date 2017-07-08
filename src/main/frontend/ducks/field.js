@@ -18,11 +18,32 @@ export default function field(state = null, action) {
 
 import fetch from 'utils/fetch';
 
-export function fetchField(playWhites) {
+export function fetchField(id) {
     return (dispatch) => {
         dispatch({ type: FIELD.REQUEST });
 
-        return fetch('/api/field?playWhites=' + playWhites, {
+        return fetch(`/api/field/${id}`, {
+            headers: { 'Accept': 'application/json' }
+        })
+            .catch(error => {
+                dispatch({ type: FIELD.ERROR, payload: error });
+
+                throw error;
+            })
+            .then(result => {
+                dispatch({ type: FIELD.SUCCESS, payload: result});
+
+                return result;
+            });
+    };
+}
+
+export function createField(playWhites) {
+    return (dispatch) => {
+        dispatch({ type: FIELD.REQUEST });
+
+        return fetch(`/api/field/${playWhites ? 'white' : 'black'}`, {
+            method: 'POST',
             headers: { 'Accept': 'application/json' }
         })
             .catch(error => {
