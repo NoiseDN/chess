@@ -25,14 +25,19 @@ public class FieldEntity implements Serializable {
     @Column(nullable = false)
     private boolean playWhites;
 
+    @Column(nullable = false)
+    private String playerName;
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "field")
     private Set<FigureEntity> figures;
 
     protected FieldEntity() {}
 
-    public FieldEntity(boolean playWhites) {
+    public FieldEntity(boolean playWhites,
+                       String playerName) {
         super();
         this.playWhites = playWhites;
+        this.playerName = playerName;
     }
 
     public Long getId() {
@@ -41,6 +46,10 @@ public class FieldEntity implements Serializable {
 
     public boolean isPlayWhites() {
         return playWhites;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
     public Set<FigureEntity> getFigures() {

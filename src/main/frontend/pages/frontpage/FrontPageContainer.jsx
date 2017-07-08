@@ -10,7 +10,7 @@ const mapStateToProps = ({ fields, field }) => ({
 
 const mapDispatchToProps = (dispatch) => ({
     fetchFields: () => dispatch(fetchFields()),
-    createField: (playWhites) => dispatch(createField(playWhites))
+    createField: (playWhites, nickName) => dispatch(createField(playWhites, nickName))
 });
 
 export default connect(

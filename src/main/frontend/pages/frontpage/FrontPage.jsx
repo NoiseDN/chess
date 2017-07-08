@@ -4,6 +4,10 @@ import { Link, browserHistory } from 'react-router';
 import './FrontPage.less';
 
 class FrontPage extends React.Component {
+    state = {
+        nickName: 'Player'
+    };
+
     componentWillMount() {
         const { fetchFields } = this.props;
 
@@ -18,23 +22,32 @@ class FrontPage extends React.Component {
         }
     }
 
+    handleNickNameChange = (e) => {
+        e && e.preventDefault();
+
+        this.setState({
+            nickName: e.target.value
+        });
+    };
+
     startNewGame = () => {
         const { createField } = this.props;
+        const { nickName } = this.state;
 
-        createField && createField(true);
+        createField && createField(true, nickName);
     };
 
     toSavedGame = (field, index) => {
         return (
             <Link key={index} to={`/game/${field.id}`} className="saved-game">
-                { field.id }
+                { field.nickName }
             </Link>
         );
     };
 
     render() {
         const { fields } = this.props;
-        // const { nickName } = this.state;
+        const { nickName } = this.state;
 
         return (
             <section className="front">
@@ -45,13 +58,13 @@ class FrontPage extends React.Component {
 
                 <section className="new-game">
                     <h3>Start a new game</h3>
-                    {/*<label htmlFor="nick-name">Name</label>*/}
-                    {/*<input*/}
-                        {/*type="text"*/}
-                        {/*id="nick-name"*/}
-                        {/*className="nick-name"*/}
-                        {/*value={nickName}*/}
-                        {/*onChange={this.handleNickNameChange} />*/}
+                    <label htmlFor="nick-name">Name</label>
+                    <input
+                        type="text"
+                        id="nick-name"
+                        className="nick-name"
+                        value={nickName}
+                        onChange={this.handleNickNameChange} />
 
                     <button
                         className="start-game"

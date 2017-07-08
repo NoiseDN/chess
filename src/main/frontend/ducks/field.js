@@ -38,13 +38,17 @@ export function fetchField(id) {
     };
 }
 
-export function createField(playWhites) {
+export function createField(playWhites, nickName) {
     return (dispatch) => {
         dispatch({ type: FIELD.REQUEST });
 
-        return fetch(`/api/field/${playWhites ? 'white' : 'black'}`, {
+        return fetch(`/api/field`, {
             method: 'POST',
-            headers: { 'Accept': 'application/json' }
+            headers: { 'Accept': 'application/json' },
+            body: JSON.stringify({
+                playWhites,
+                nickName
+            })
         })
             .catch(error => {
                 dispatch({ type: FIELD.ERROR, payload: error });

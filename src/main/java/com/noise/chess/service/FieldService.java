@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
 
 @Service
 public class FieldService {
@@ -40,8 +37,8 @@ public class FieldService {
      * @param playWhites
      * @return
      */
-    public Field createField(boolean playWhites) {
-        Field newField = Field.of(playWhites);
+    public Field createField(boolean playWhites, String nickName) {
+        Field newField = Field.of(playWhites, nickName);
 
         FieldEntity createdEntity = fieldRepository.save(toEntity(newField));
 
@@ -49,7 +46,7 @@ public class FieldService {
 
         LOG.info("New field created with id " + createdEntity.getId());
 
-        return Field.of(createdEntity.getId(), playWhites, newField.getFigures());
+        return Field.of(createdEntity.getId(), playWhites, nickName, newField.getFigures());
     }
 
     /**
@@ -85,6 +82,7 @@ public class FieldService {
         return Field.of(
             entity.getId(),
             entity.isPlayWhites(),
+            entity.getPlayerName(),
             entity.getFigures().stream()
                 .map(this::toFigure).collect(Collectors.toSet()));
     }
@@ -106,7 +104,7 @@ public class FieldService {
     }
 
     private FieldEntity toEntity(Field dto) {
-        return new FieldEntity(dto.isPlayWhites());
+        return new FieldEntity(dto.isPlayWhites(), dto.getPlayerName());
     }
 
     private FigureEntity toEntity(Figure figure, FieldEntity field) {

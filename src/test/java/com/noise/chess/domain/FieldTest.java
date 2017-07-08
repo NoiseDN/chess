@@ -11,7 +11,7 @@ import static org.fest.assertions.Assertions.assertThat;
 public class FieldTest {
     @Test
     public void checks_that_opponent_plays_black_for_white_player() {
-        Field field = Field.of(true);
+        Field field = Field.of(true, "Player");
 
         assertThat(field.isPlayWhites()).isTrue();
 
@@ -29,7 +29,7 @@ public class FieldTest {
 
     @Test
     public void checks_that_opponent_plays_white_for_black_player() {
-        Field field = Field.of(false);
+        Field field = Field.of(false, "Player");
 
         assertThat(field.isPlayWhites()).isFalse();
 

@@ -24,25 +24,28 @@ public final class Field {
     private final Long id;
     private final boolean playWhites;
     private final Set<Figure> figures;
+    private final String playerName;
 
-    private Field(Long id, boolean playWhites, Set<Figure> figures) {
+    private Field(Long id, boolean playWhites, String nickName, Set<Figure> figures) {
         this.id = id;
         this.playWhites = playWhites;
         this.figures = figures;
+        this.playerName = nickName;
     }
 
-    private Field(Long id, boolean playWhites) {
+    private Field(Long id, boolean playWhites, String nickName) {
         this.id = id;
         this.playWhites = playWhites;
         this.figures = getNewGameFigures(playWhites);
+        this.playerName = nickName;
     }
 
-    public static Field of(Long id, boolean playWhites, Set<Figure> figures) {
-        return new Field(id, playWhites, figures);
+    public static Field of(Long id, boolean playWhites, String nickName, Set<Figure> figures) {
+        return new Field(id, playWhites, nickName, figures);
     }
 
-    public static Field of(boolean playWhites) {
-        return new Field(null, playWhites);
+    public static Field of(boolean playWhites, String nickName) {
+        return new Field(null, playWhites, nickName);
     }
 
     public Long getId() {
@@ -55,6 +58,10 @@ public final class Field {
 
     public Set<Figure> getFigures() {
         return figures;
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 
     private Set<Figure> getNewGameFigures(boolean playWhites) {
