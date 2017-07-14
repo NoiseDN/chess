@@ -8,9 +8,12 @@ import com.noise.chess.domain.FigureType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.noise.chess.domain.Coordinates.X;
 import static com.noise.chess.domain.Coordinates.Y;
@@ -87,10 +90,7 @@ public class MoveService {
         Set<Coordinates> rookMoves = new HashSet<>();
 
         possibleDirections.clear();
-        possibleDirections.add(Direction.Up);
-        possibleDirections.add(Direction.Down);
-        possibleDirections.add(Direction.Left);
-        possibleDirections.add(Direction.Right);
+        possibleDirections.addAll(Direction.cross());
 
         int x = figure.getCoordinates().getX().ordinal();
         int y = figure.getCoordinates().getY().ordinal();
@@ -109,22 +109,22 @@ public class MoveService {
         Set<Coordinates> knightMoves = new HashSet<>();
 
         possibleDirections.clear();
-        possibleDirections.add(Direction.Any);
+        possibleDirections.add(Direction.Knight);
 
         int x = figure.getCoordinates().getX().ordinal();
         int y = figure.getCoordinates().getY().ordinal();
 
-        add(knightMoves, of(X.of(x - 2), Y.of(y - 1)), field, figure);
-        add(knightMoves, of(X.of(x - 1), Y.of(y - 2)), field, figure);
+        add(knightMoves, of(X.of(x - 2), Y.of(y - 1)), field, figure, Direction.Knight);
+        add(knightMoves, of(X.of(x - 1), Y.of(y - 2)), field, figure, Direction.Knight);
 
-        add(knightMoves, of(X.of(x + 2), Y.of(y - 1)), field, figure);
-        add(knightMoves, of(X.of(x + 1), Y.of(y - 2)), field, figure);
+        add(knightMoves, of(X.of(x + 2), Y.of(y - 1)), field, figure, Direction.Knight);
+        add(knightMoves, of(X.of(x + 1), Y.of(y - 2)), field, figure, Direction.Knight);
 
-        add(knightMoves, of(X.of(x - 2), Y.of(y + 1)), field, figure);
-        add(knightMoves, of(X.of(x - 1), Y.of(y + 2)), field, figure);
+        add(knightMoves, of(X.of(x - 2), Y.of(y + 1)), field, figure, Direction.Knight);
+        add(knightMoves, of(X.of(x - 1), Y.of(y + 2)), field, figure, Direction.Knight);
 
-        add(knightMoves, of(X.of(x + 2), Y.of(y + 1)), field, figure);
-        add(knightMoves, of(X.of(x + 1), Y.of(y + 2)), field, figure);
+        add(knightMoves, of(X.of(x + 2), Y.of(y + 1)), field, figure, Direction.Knight);
+        add(knightMoves, of(X.of(x + 1), Y.of(y + 2)), field, figure, Direction.Knight);
 
         return knightMoves;
     }
@@ -133,10 +133,7 @@ public class MoveService {
         Set<Coordinates> bishopMoves = new HashSet<>();
 
         possibleDirections.clear();
-        possibleDirections.add(Direction.UpLeft);
-        possibleDirections.add(Direction.UpRight);
-        possibleDirections.add(Direction.DownLeft);
-        possibleDirections.add(Direction.DownRight);
+        possibleDirections.addAll(Direction.diagonal());
 
         int x = figure.getCoordinates().getX().ordinal();
         int y = figure.getCoordinates().getY().ordinal();
@@ -155,14 +152,7 @@ public class MoveService {
         Set<Coordinates> queenMoves = new HashSet<>();
 
         possibleDirections.clear();
-        possibleDirections.add(Direction.Up);
-        possibleDirections.add(Direction.Down);
-        possibleDirections.add(Direction.Left);
-        possibleDirections.add(Direction.Right);
-        possibleDirections.add(Direction.UpLeft);
-        possibleDirections.add(Direction.UpRight);
-        possibleDirections.add(Direction.DownLeft);
-        possibleDirections.add(Direction.DownRight);
+        possibleDirections.addAll(Direction.all());
 
         int x = figure.getCoordinates().getX().ordinal();
         int y = figure.getCoordinates().getY().ordinal();
@@ -185,14 +175,7 @@ public class MoveService {
         Set<Coordinates> kingMoves = new HashSet<>(8);
 
         possibleDirections.clear();
-        possibleDirections.add(Direction.Up);
-        possibleDirections.add(Direction.Down);
-        possibleDirections.add(Direction.Left);
-        possibleDirections.add(Direction.Right);
-        possibleDirections.add(Direction.UpLeft);
-        possibleDirections.add(Direction.UpRight);
-        possibleDirections.add(Direction.DownLeft);
-        possibleDirections.add(Direction.DownRight);
+        possibleDirections.addAll(Direction.all());
 
         int x = figure.getCoordinates().getX().ordinal();
         int y = figure.getCoordinates().getY().ordinal();
@@ -236,11 +219,19 @@ public class MoveService {
         return false;
     }
 
-    private boolean add(Set<Coordinates> moves, Coordinates coordinates, Field field, Figure figure) {
-        return add(moves, coordinates, field, figure, Direction.Any);
-    }
-
     private enum Direction {
-        Up, Down, Left, Right, UpRight, UpLeft, DownRight, DownLeft, Any
+        Up, Down, Left, Right, UpRight, UpLeft, DownRight, DownLeft, Knight;
+
+        static List<Direction> all() {
+            return Arrays.stream(values()).collect(Collectors.toList());
+        }
+
+        static List<Direction> diagonal() {
+            return Arrays.asList(UpLeft, UpRight, DownLeft, DownRight);
+        }
+
+        static List<Direction> cross() {
+            return Arrays.asList(Up, Right, Left, Right);
+        }
     }
 }
