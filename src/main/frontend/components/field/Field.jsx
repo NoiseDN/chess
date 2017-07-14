@@ -257,20 +257,19 @@ class Field extends React.Component {
         cells.map(cell => {
             if (clickedX < cell.right && clickedX > cell.left && clickedY > cell.top && clickedY < cell.bottom) {
                 if (this.selectedCell === cell) {
-
-                    // Deselect cell
-
-                    this.selectedCell = null;
-                    this.moves = null;
-                    this.reRender();
+                    this.deselectCell();
                 } else if (this.selectedCell && this.moves) {
 
-                    // Move selected figure to cell
+                    // Move selected figure to cell only if move is possible
 
-                    const { moveFigure } = this.props;
-                    const figure = this.getFigureAt(this.selectedCell.coordinates);
+                    if (this.moves.some(m => m.equals(cell.coordinates))) {
+                        const { moveFigure } = this.props;
+                        const figure = this.getFigureAt(this.selectedCell.coordinates);
 
-                    moveFigure && moveFigure(figure.id, cell.coordinates);
+                        moveFigure && moveFigure(figure.id, cell.coordinates);
+                    } else {
+                        this.deselectCell();
+                    }
                 } else {
 
                     // Select new cell
@@ -289,6 +288,12 @@ class Field extends React.Component {
             }
         });
     };
+
+    deselectCell() {
+        this.selectedCell = null;
+        this.moves = null;
+        this.reRender();
+    }
 
     render() {
         const { width, height } = this.props;

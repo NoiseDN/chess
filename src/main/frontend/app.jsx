@@ -11,6 +11,8 @@ import Game from 'pages/game/GameContainer';
 import store from 'store';
 import Root from 'root/RootContainer';
 
+import 'prototype';
+
 const ReduxProvider = (props) => {
     return (
         <Provider store={store}>
