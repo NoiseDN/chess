@@ -5,7 +5,7 @@ import './FrontPage.less';
 
 class FrontPage extends React.Component {
     state = {
-        nickName: 'Player'
+        playerName: 'Player'
     };
 
     componentWillMount() {
@@ -22,32 +22,32 @@ class FrontPage extends React.Component {
         }
     }
 
-    handleNickNameChange = (e) => {
+    handlePlayerNameChange = (e) => {
         e && e.preventDefault();
 
         this.setState({
-            nickName: e.target.value
+            playerName: e.target.value
         });
     };
 
     startNewGame = () => {
         const { createField } = this.props;
-        const { nickName } = this.state;
+        const { playerName } = this.state;
 
-        createField && createField(true, nickName);
+        createField && createField(true, playerName);
     };
 
     toSavedGame = (field, index) => {
         return (
             <Link key={index} to={`/game/${field.id}`} className="saved-game">
-                { field.nickName }
+                { field.playerName }
             </Link>
         );
     };
 
     render() {
         const { fields } = this.props;
-        const { nickName } = this.state;
+        const { playerName } = this.state;
 
         return (
             <section className="front">
@@ -61,10 +61,10 @@ class FrontPage extends React.Component {
                     <label htmlFor="nick-name">Name</label>
                     <input
                         type="text"
-                        id="nick-name"
-                        className="nick-name"
-                        value={nickName}
-                        onChange={this.handleNickNameChange} />
+                        id="player-name"
+                        className="player-name"
+                        value={playerName}
+                        onChange={this.handlePlayerNameChange} />
 
                     <button
                         className="start-game"
@@ -73,7 +73,7 @@ class FrontPage extends React.Component {
                     </button>
                 </section>
 
-                { fields &&
+                { fields && fields.length > 0 &&
                     <section className="load-game">
                         <h3>Load saved game</h3>
                         { fields.map(this.toSavedGame) }

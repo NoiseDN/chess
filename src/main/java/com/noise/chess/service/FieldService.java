@@ -78,6 +78,23 @@ public class FieldService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Moves figure to a given coordinates
+     *
+     * @param figureId
+     * @param coordinates
+     * @return
+     */
+    public boolean moveFigure(Long figureId, String coordinates) {
+        FigureEntity figure = figureRepository.findOne(figureId);
+        figure.setCoordinates(coordinates);
+
+        figureRepository.save(figure);
+        LOG.info("Figure moved: {}", toFigure(figure));
+
+        return true;
+    }
+
     private Field toField(FieldEntity entity) {
         return Field.of(
             entity.getId(),

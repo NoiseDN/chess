@@ -29,6 +29,7 @@ class Field extends React.Component {
         id: React.PropTypes.number.isRequired,
         figures: React.PropTypes.array.isRequired,
         getPossibleMoves: React.PropTypes.func.isRequired,
+        moveFigure: React.PropTypes.func.isRequired,
         moves: React.PropTypes.array
     };
 
@@ -256,10 +257,24 @@ class Field extends React.Component {
         cells.map(cell => {
             if (clickedX < cell.right && clickedX > cell.left && clickedY > cell.top && clickedY < cell.bottom) {
                 if (this.selectedCell === cell) {
+
+                    // Deselect cell
+
                     this.selectedCell = null;
                     this.moves = null;
                     this.reRender();
+                } else if (this.selectedCell && this.moves) {
+
+                    // Move selected figure to cell
+
+                    const { moveFigure } = this.props;
+                    const figure = this.getFigureAt(this.selectedCell.coordinates);
+
+                    moveFigure && moveFigure(figure.id, cell.coordinates);
                 } else {
+
+                    // Select new cell
+
                     const figure = this.getFigureAt(cell.coordinates);
 
                     //TODO: check if selected figure is PLAYER's or OPPONENT's

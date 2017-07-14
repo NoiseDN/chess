@@ -65,6 +65,10 @@ public class FigureEntity implements Serializable {
         return coordinates;
     }
 
+    public void setCoordinates(String coordinates) {
+        this.coordinates = coordinates;
+    }
+
     public Color getColor() {
         return color;
     }

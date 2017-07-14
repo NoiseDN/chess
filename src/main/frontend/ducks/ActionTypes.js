@@ -8,6 +8,8 @@ function createSymbols(entity) {
 
 module.exports = {
     FIELD : createSymbols('Field'),
+    FIGURE : createSymbols('Figure'),
     FIELDS : createSymbols('Fields'),
-    MOVES : createSymbols('Moves')
+    MOVES : createSymbols('Moves'),
+    MOVE : createSymbols('Move')
 };
