@@ -23,10 +23,10 @@ class Game extends React.Component {
         fetchField && fetchField(id);
     }
 
-    moveFigure = (figureId, coordinates) => {
+    moveFigure = (figureId, moveType, coordinates) => {
         const { moveFigure } = this.props;
 
-        moveFigure && moveFigure(figureId, coordinates).then(() => this.refresh());
+        moveFigure && moveFigure(figureId, moveType, coordinates).then(() => this.refresh());
     };
 
     render() {

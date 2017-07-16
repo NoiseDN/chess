@@ -3,6 +3,7 @@ package com.noise.chess.service;
 import com.noise.chess.domain.Coordinates;
 import com.noise.chess.domain.Field;
 import com.noise.chess.domain.Figure;
+import com.noise.chess.domain.Move;
 import com.noise.chess.entity.FieldEntity;
 import com.noise.chess.entity.FigureEntity;
 import com.noise.chess.repository.FieldRepository;
@@ -79,15 +80,29 @@ public class FieldService {
     }
 
     /**
-     * Moves figure to a given coordinates
+     * Applies to figure a given Move
      *
      * @param figureId
-     * @param coordinates
+     * @param move
      * @return
      */
-    public boolean moveFigure(Long figureId, String coordinates) {
+    public boolean moveFigure(Long figureId, Move move) {
         FigureEntity figure = figureRepository.findOne(figureId);
-        figure.setCoordinates(coordinates);
+
+        if (move.isAttack()) {
+            Optional<FigureEntity> figureKilled = figure.getField().getFigures().stream()
+                .filter(f -> f.getCoordinates().equals(move.getCoordinates().toString()))
+                .findFirst();
+
+            if (!figureKilled.isPresent()) {
+                LOG.warn("Cannot kill figure at " + move.getCoordinates() + ". No figures on the way.");
+            } else {
+                figureRepository.delete(figureKilled.get());
+                LOG.info("Opponent figure killed at {}", move.getCoordinates());
+            }
+        }
+
+        figure.setCoordinates(move.getCoordinates().toString());
 
         figureRepository.save(figure);
         LOG.info("Figure moved: {}", toFigure(figure));

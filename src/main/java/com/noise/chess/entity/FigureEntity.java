@@ -39,7 +39,7 @@ public class FigureEntity implements Serializable {
     @Column(nullable = false)
     private boolean opponent;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "FIELD_ID")
     private FieldEntity field;
 

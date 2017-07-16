@@ -12,7 +12,7 @@ const mapStateToProps = ({ field, moves, move }) => ({
 const mapDispatchToProps = (dispatch) => ({
     fetchField: (id) => dispatch(fetchField(id)),
     getPossibleMoves: (fieldId, figure) => dispatch(getPossibleMoves(fieldId, figure)),
-    moveFigure: (figureId, coordinates) => dispatch(moveFigure(figureId, coordinates))
+    moveFigure: (figureId, moveType, coordinates) => dispatch(moveFigure(figureId, moveType, coordinates))
 });
 
 export default connect(

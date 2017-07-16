@@ -4,9 +4,18 @@ public class Move {
     private final Coordinates coordinates;
     private final MoveType moveType;
 
+    private Move() {
+        this.coordinates = null;
+        this.moveType = null;
+    }
+
     private Move(MoveType moveType, Coordinates coordinates) {
         this.coordinates = coordinates;
         this.moveType = moveType;
+    }
+
+    public boolean isAttack() {
+        return moveType != null && moveType.equals(MoveType.ATTACK);
     }
 
     public static Move move(Coordinates coordinates) {

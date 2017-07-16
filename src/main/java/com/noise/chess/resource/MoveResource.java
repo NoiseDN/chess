@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Set;
 
 @RestController
-@RequestMapping(value = "api", produces = "application/json")
+@RequestMapping(value = "api", consumes = "application/json", produces = "application/json")
 public class MoveResource {
 
     private final MoveService moveService;
@@ -36,11 +36,11 @@ public class MoveResource {
     }
     @RequestMapping(value = "move/{figureId}", method = RequestMethod.PUT)
     public ResponseEntity moveFigure(@PathVariable Long figureId,
-                                     @RequestBody String coordinates) {
-        if (fieldService.moveFigure(figureId, coordinates)) {
+                                     @RequestBody Move move) {
+        if (fieldService.moveFigure(figureId, move)) {
             return ResponseEntity.ok().build();
         }
 
-        throw new UnsupportedOperationException("Cannot move figure " + figureId + " to " + coordinates);
+        throw new UnsupportedOperationException("Cannot move figure " + figureId + " to " + move.getCoordinates());
     }
 }

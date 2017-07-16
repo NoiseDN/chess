@@ -15,4 +15,6 @@ public interface FigureRepository extends Repository<FigureEntity, Long> {
     FigureEntity save(FigureEntity figure);
 
     Set<FigureEntity> save(Set<FigureEntity> figures);
+
+    void delete(FigureEntity figure);
 }

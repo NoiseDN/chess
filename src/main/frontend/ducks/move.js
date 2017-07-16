@@ -18,13 +18,16 @@ export default function moves(state = null, action) {
 
 import fetch from 'utils/fetch';
 
-export function moveFigure(figureId, coordinates) {
+export function moveFigure(figureId, moveType, coordinates) {
     return (dispatch) => {
         dispatch({ type: MOVE.REQUEST });
 
         return fetch(`/api/move/${figureId}`, {
             method: 'PUT',
-            body: '' + coordinates
+            body: JSON.stringify({
+                moveType,
+                coordinates
+            })
         })
             .catch(error => {
                 dispatch({ type: MOVE.ERROR });

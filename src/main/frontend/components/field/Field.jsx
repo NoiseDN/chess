@@ -263,11 +263,14 @@ class Field extends React.Component {
 
                     // Move selected figure to cell only if move is possible
 
-                    if (this.moves.map(m => m.coordinates).some(coords => coords.equals(cell.coordinates))) {
+                    const moveIsPossible = this.moves.map(m => m.coordinates).some(coords => coords.equals(cell.coordinates));
+
+                    if (moveIsPossible) {
                         const { moveFigure } = this.props;
+                        const { moveType } = this.moves.find(m => m.coordinates.equals(cell.coordinates));
                         const figure = this.getFigureAt(this.selectedCell.coordinates);
 
-                        moveFigure && moveFigure(figure.id, cell.coordinates);
+                        moveFigure && moveFigure(figure.id, moveType, cell.coordinates);
                     } else {
                         this.deselectCell();
                     }

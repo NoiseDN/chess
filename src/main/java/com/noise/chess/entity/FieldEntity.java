@@ -28,7 +28,7 @@ public class FieldEntity implements Serializable {
     @Column(nullable = false)
     private String playerName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "field")
+    @OneToMany(mappedBy = "field")
     private Set<FigureEntity> figures;
 
     protected FieldEntity() {}
