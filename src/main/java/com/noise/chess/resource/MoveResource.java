@@ -1,7 +1,7 @@
 package com.noise.chess.resource;
 
-import com.noise.chess.domain.Coordinates;
 import com.noise.chess.domain.Figure;
+import com.noise.chess.domain.Move;
 import com.noise.chess.service.FieldService;
 import com.noise.chess.service.MoveService;
 
@@ -30,8 +30,8 @@ public class MoveResource {
     }
 
     @RequestMapping(value = "moves/{fieldId}", method = RequestMethod.POST)
-    public Set<Coordinates> getPossibleMoves(@PathVariable Long fieldId,
-                                             @RequestBody Figure figure) {
+    public Set<Move> getPossibleMoves(@PathVariable Long fieldId,
+                                      @RequestBody Figure figure) {
         return moveService.getPossibleMoves(fieldId, figure);
     }
     @RequestMapping(value = "move/{figureId}", method = RequestMethod.PUT)

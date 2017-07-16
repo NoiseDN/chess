@@ -95,6 +95,10 @@ public class Figure {
         return opponent;
     }
 
+    public boolean isPlayer() {
+        return !opponent;
+    }
+
     public String toString() {
         return (opponent ? "OPPONENT's " : "PLAYER's ") + color + " " + figureType + " at " + coordinates;
     }

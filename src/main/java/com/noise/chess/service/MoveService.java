@@ -4,6 +4,7 @@ import com.noise.chess.domain.Coordinates;
 import com.noise.chess.domain.Field;
 import com.noise.chess.domain.Figure;
 import com.noise.chess.domain.FigureType;
+import com.noise.chess.domain.Move;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class MoveService {
         this.fieldService = fieldService;
     }
 
-    public Set<Coordinates> getPossibleMoves(Long fieldId, Figure figure) {
+    public Set<Move> getPossibleMoves(Long fieldId, Figure figure) {
         Optional<Field> fieldOp = fieldService.getField(fieldId);
 
         if (!fieldOp.isPresent()) {
@@ -58,8 +59,8 @@ public class MoveService {
         }
     }
 
-    private Set<Coordinates> getPawnMoves(Field field, Figure figure) {
-        Set<Coordinates> pawnMoves = new HashSet<>();
+    private Set<Move> getPawnMoves(Field field, Figure figure) {
+        Set<Move> pawnMoves = new HashSet<>();
 
         possibleDirections.clear();
 
@@ -86,8 +87,8 @@ public class MoveService {
         return pawnMoves;
     }
 
-    private Set<Coordinates> getRookMoves(Field field, Figure figure) {
-        Set<Coordinates> rookMoves = new HashSet<>();
+    private Set<Move> getRookMoves(Field field, Figure figure) {
+        Set<Move> rookMoves = new HashSet<>();
 
         possibleDirections.clear();
         possibleDirections.addAll(Direction.cross());
@@ -105,8 +106,8 @@ public class MoveService {
         return rookMoves;
     }
 
-    private Set<Coordinates> getKnightMoves(Field field, Figure figure) {
-        Set<Coordinates> knightMoves = new HashSet<>();
+    private Set<Move> getKnightMoves(Field field, Figure figure) {
+        Set<Move> knightMoves = new HashSet<>();
 
         possibleDirections.clear();
         possibleDirections.add(Direction.Knight);
@@ -129,8 +130,8 @@ public class MoveService {
         return knightMoves;
     }
 
-    private Set<Coordinates> getBishopMoves(Field field, Figure figure) {
-        Set<Coordinates> bishopMoves = new HashSet<>();
+    private Set<Move> getBishopMoves(Field field, Figure figure) {
+        Set<Move> bishopMoves = new HashSet<>();
 
         possibleDirections.clear();
         possibleDirections.addAll(Direction.diagonal());
@@ -148,8 +149,8 @@ public class MoveService {
         return bishopMoves;
     }
 
-    private Set<Coordinates> getQueenMoves(Field field, Figure figure) {
-        Set<Coordinates> queenMoves = new HashSet<>();
+    private Set<Move> getQueenMoves(Field field, Figure figure) {
+        Set<Move> queenMoves = new HashSet<>();
 
         possibleDirections.clear();
         possibleDirections.addAll(Direction.all());
@@ -171,8 +172,8 @@ public class MoveService {
         return queenMoves;
     }
 
-    private Set<Coordinates> getKingMoves(Field field, Figure figure) {
-        Set<Coordinates> kingMoves = new HashSet<>(8);
+    private Set<Move> getKingMoves(Field field, Figure figure) {
+        Set<Move> kingMoves = new HashSet<>(8);
 
         possibleDirections.clear();
         possibleDirections.addAll(Direction.all());
@@ -192,7 +193,7 @@ public class MoveService {
         return kingMoves;
     }
 
-    private boolean add(Set<Coordinates> moves, Coordinates coordinates, Field field, Figure figure, Direction direction) {
+    private boolean add(Set<Move> moves, Coordinates coordinates, Field field, Figure figure, Direction direction) {
         X x = coordinates.getX();
         Y y = coordinates.getY();
 
@@ -200,20 +201,33 @@ public class MoveService {
             return possibleDirections.remove(direction);
         }
 
-        boolean thereAreFiguresOnTheWay = field.getFigures().stream()
+        boolean thereArePlayerFiguresOnTheWay = field.getFigures().stream()
+            .filter(Figure::isPlayer)
             .anyMatch(f -> f.getCoordinates().getX() == x && f.getCoordinates().getY() == y);
-        
+        boolean thereAreOpponentFiguresOnTheWay = field.getFigures().stream()
+            .filter(Figure::isOpponent)
+            .anyMatch(f -> f.getCoordinates().getX() == x && f.getCoordinates().getY() == y);
+
         // Knights can jump
-        if (figure.getFigureType() == FigureType.Knight && !thereAreFiguresOnTheWay) {
-            return moves.add(coordinates);
+        if (figure.getFigureType() == FigureType.Knight) {
+            if (thereAreOpponentFiguresOnTheWay) {
+                return moves.add(Move.attack(coordinates));
+            } else if (!thereArePlayerFiguresOnTheWay) {
+                return moves.add(Move.move(coordinates));
+            }
         }
 
-        if (thereAreFiguresOnTheWay) {
+        if (thereArePlayerFiguresOnTheWay) {
             return possibleDirections.remove(direction);
         }
 
         if (possibleDirections.contains(direction)) {
-            return moves.add(coordinates);
+            if (thereAreOpponentFiguresOnTheWay) {
+                possibleDirections.remove(direction);
+                return moves.add(Move.attack(coordinates));
+            }
+
+            return moves.add(Move.move(coordinates));
         }
 
         return false;

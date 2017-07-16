@@ -7,6 +7,7 @@ import './Field.less';
 const CELL_COLOR = 'rgb(99, 99, 99)';
 const SELECTION_COLOR = 'rgba(163, 233, 255, 0.5)';
 const POSSIBLE_MOVE_COLOR = 'rgba(255, 233, 163, 0.5)';
+const POSSIBLE_ATTACK_COLOR = 'rgba(255, 133, 163, 0.5)';
 const COORDINATES = [
     ['8', '7', '6', '5', '4', '3', '2', '1'],
     ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
@@ -123,9 +124,9 @@ class Field extends React.Component {
 
         if (moves && moves.length > 0) {
             moves.map(move => {
-                const cell = this.getCellAt(move);
+                const cell = this.getCellAt(move.coordinates);
 
-                ctx.fillStyle = POSSIBLE_MOVE_COLOR;
+                ctx.fillStyle = move.moveType === 'MOVE' ? POSSIBLE_MOVE_COLOR : POSSIBLE_ATTACK_COLOR;
                 ctx.fillRect(cell.left, cell.top, cell.size, cell.size);
             });
         }
@@ -262,7 +263,7 @@ class Field extends React.Component {
 
                     // Move selected figure to cell only if move is possible
 
-                    if (this.moves.some(m => m.equals(cell.coordinates))) {
+                    if (this.moves.map(m => m.coordinates).some(coords => coords.equals(cell.coordinates))) {
                         const { moveFigure } = this.props;
                         const figure = this.getFigureAt(this.selectedCell.coordinates);
 
