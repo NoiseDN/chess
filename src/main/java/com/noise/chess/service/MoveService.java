@@ -67,18 +67,26 @@ public class MoveService {
         int x = figure.getCoordinates().getX().ordinal();
         int y = figure.getCoordinates().getY().ordinal();
 
-        //TODO: add diagonal attacking move
+        //TODO: fix BLACK attack diagonal (OPPONENT)
 
         switch (figure.getColor()) {
             case WHITE:
                 possibleDirections.add(Direction.Down);
-                add(pawnMoves, of(X.of(x), Y.of(y - 1)), field, figure, Direction.Down);
-                add(pawnMoves, of(X.of(x), Y.of(y - 2)), field, figure, Direction.Down);
+                possibleDirections.add(Direction.DownRight);
+                possibleDirections.add(Direction.DownLeft);
+                add(pawnMoves, of(X.of(x),     Y.of(y - 1)), field, figure, Direction.Down);
+                add(pawnMoves, of(X.of(x),     Y.of(y - 2)), field, figure, Direction.Down);
+                add(pawnMoves, of(X.of(x + 1), Y.of(y - 1)), field, figure, Direction.DownRight);
+                add(pawnMoves, of(X.of(x - 1), Y.of(y - 1)), field, figure, Direction.DownLeft);
                 break;
             case BLACK:
                 possibleDirections.add(Direction.Up);
-                add(pawnMoves, of(X.of(x), Y.of(y + 1)), field, figure, Direction.Up);
-                add(pawnMoves, of(X.of(x), Y.of(y + 2)), field, figure, Direction.Up);
+                possibleDirections.add(Direction.UpRight);
+                possibleDirections.add(Direction.UpLeft);
+                add(pawnMoves, of(X.of(x),     Y.of(y + 1)), field, figure, Direction.Up);
+                add(pawnMoves, of(X.of(x),     Y.of(y + 2)), field, figure, Direction.Up);
+                add(pawnMoves, of(X.of(x + 1), Y.of(y + 1)), field, figure, Direction.UpRight);
+                add(pawnMoves, of(X.of(x - 1), Y.of(y + 1)), field, figure, Direction.UpLeft);
                 break;
             default:
                 throw new RuntimeException("Unknown color " + figure.getColor());
@@ -217,6 +225,18 @@ public class MoveService {
             }
         }
 
+        // Pawns can attack by diagonal
+        if (figure.getFigureType() == FigureType.Pawn) {
+            if (direction.isDiagonal()) {
+                possibleDirections.remove(direction);
+                if (thereAreOpponentFiguresOnTheWay) {
+                    return moves.add(Move.attack(coordinates));
+                }
+            } else if (thereAreOpponentFiguresOnTheWay) {
+                return possibleDirections.remove(direction);
+            }
+        }
+
         if (thereArePlayerFiguresOnTheWay) {
             return possibleDirections.remove(direction);
         }
@@ -246,6 +266,10 @@ public class MoveService {
 
         static List<Direction> cross() {
             return Arrays.asList(Up, Right, Left, Right);
+        }
+
+        public boolean isDiagonal() {
+            return diagonal().contains(this);
         }
     }
 }
