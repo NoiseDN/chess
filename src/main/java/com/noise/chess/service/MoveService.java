@@ -67,8 +67,6 @@ public class MoveService {
         int x = figure.getCoordinates().getX().ordinal();
         int y = figure.getCoordinates().getY().ordinal();
 
-        //TODO: fix BLACK attack diagonal (OPPONENT)
-
         switch (figure.getColor()) {
             case WHITE:
                 possibleDirections.add(Direction.Down);
@@ -210,10 +208,10 @@ public class MoveService {
         }
 
         boolean thereArePlayerFiguresOnTheWay = field.getFigures().stream()
-            .filter(Figure::isPlayer)
+            .filter(f -> f.getColor().equals(figure.getColor()))
             .anyMatch(f -> f.getCoordinates().getX() == x && f.getCoordinates().getY() == y);
         boolean thereAreOpponentFiguresOnTheWay = field.getFigures().stream()
-            .filter(Figure::isOpponent)
+            .filter(f -> !f.getColor().equals(figure.getColor()))
             .anyMatch(f -> f.getCoordinates().getX() == x && f.getCoordinates().getY() == y);
 
         // Knights can jump
