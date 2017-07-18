@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Field from 'components/field/Field';
+import History from 'components/history/History';
 
 class Game extends React.Component {
     static propTypes = {
@@ -50,6 +51,8 @@ class Game extends React.Component {
                     moves={moves}
                     width="480"
                     height="480"/>
+                <History
+                    history={field.history}/>
             </section>
         );
     }

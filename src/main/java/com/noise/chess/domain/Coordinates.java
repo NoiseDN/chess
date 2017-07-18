@@ -46,6 +46,10 @@ public class Coordinates {
             this.text = text;
         }
 
+        public String getText() {
+            return text;
+        }
+
         public static X of(int index) {
             return Stream.of(X.values()).filter(c -> c.ordinal() == index)
                 .findFirst()
@@ -67,6 +71,10 @@ public class Coordinates {
 
         Y(String text) {
             this.text = text;
+        }
+
+        public String getText() {
+            return text;
         }
 
         public static Y of(int index) {

@@ -2,10 +2,10 @@ package com.noise.chess.entity;
 
 import com.noise.chess.domain.Color;
 import com.noise.chess.domain.FigureType;
+import com.noise.chess.util.CoordinateUtil;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -83,5 +83,10 @@ public class FigureEntity implements Serializable {
 
     public FieldEntity getField() {
         return field;
+    }
+
+    @Override
+    public String toString() {
+        return (opponent ? "OPPONENT's " : "PLAYER's ") + color + " " + figureType + " at " + CoordinateUtil.toChessFormat(coordinates);
     }
 }

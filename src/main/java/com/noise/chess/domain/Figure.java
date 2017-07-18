@@ -1,5 +1,7 @@
 package com.noise.chess.domain;
 
+import com.noise.chess.util.CoordinateUtil;
+
 public class Figure {
     private final Long id;
     private final Color color;
@@ -100,6 +102,6 @@ public class Figure {
     }
 
     public String toString() {
-        return (opponent ? "OPPONENT's " : "PLAYER's ") + color + " " + figureType + " at " + coordinates;
+        return (opponent ? "OPPONENT's " : "PLAYER's ") + color + " " + figureType + " at " + CoordinateUtil.toChessFormat(coordinates);
     }
 }

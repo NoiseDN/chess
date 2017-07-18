@@ -1,6 +1,8 @@
 package com.noise.chess.domain;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,12 +27,19 @@ public final class Field {
     private final boolean playWhites;
     private final Set<Figure> figures;
     private final String playerName;
+    private final List<HistoryEntryDTO> history;
 
-    private Field(Long id, boolean playWhites, String nickName, Set<Figure> figures) {
+    private Field(Long id,
+                  boolean playWhites,
+                  String nickName,
+                  Set<Figure>
+                  figures,
+                  List<HistoryEntryDTO> history) {
         this.id = id;
         this.playWhites = playWhites;
         this.figures = figures;
         this.playerName = nickName;
+        this.history = history;
     }
 
     private Field(Long id, boolean playWhites, String nickName) {
@@ -38,10 +47,11 @@ public final class Field {
         this.playWhites = playWhites;
         this.figures = getNewGameFigures(playWhites);
         this.playerName = nickName;
+        this.history = new ArrayList<>();
     }
 
-    public static Field of(Long id, boolean playWhites, String nickName, Set<Figure> figures) {
-        return new Field(id, playWhites, nickName, figures);
+    public static Field of(Long id, boolean playWhites, String nickName, Set<Figure> figures, List<HistoryEntryDTO> history) {
+        return new Field(id, playWhites, nickName, figures, history);
     }
 
     public static Field of(boolean playWhites, String nickName) {
@@ -62,6 +72,10 @@ public final class Field {
 
     public String getPlayerName() {
         return playerName;
+    }
+
+    public List<HistoryEntryDTO> getHistory() {
+        return history;
     }
 
     private Set<Figure> getNewGameFigures(boolean playWhites) {

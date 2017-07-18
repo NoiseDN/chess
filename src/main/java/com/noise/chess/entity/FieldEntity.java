@@ -1,9 +1,9 @@
 package com.noise.chess.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,6 +31,9 @@ public class FieldEntity implements Serializable {
     @OneToMany(mappedBy = "field")
     private Set<FigureEntity> figures;
 
+    @OneToMany(mappedBy = "field")
+    private List<HistoryEntry> history;
+
     protected FieldEntity() {}
 
     public FieldEntity(boolean playWhites,
@@ -54,6 +57,14 @@ public class FieldEntity implements Serializable {
 
     public Set<FigureEntity> getFigures() {
         return figures;
+    }
+
+    public List<HistoryEntry> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<HistoryEntry> history) {
+        this.history = history;
     }
 
     public void setFigures(Set<FigureEntity> figures) {

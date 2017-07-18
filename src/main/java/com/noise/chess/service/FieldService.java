@@ -3,11 +3,15 @@ package com.noise.chess.service;
 import com.noise.chess.domain.Coordinates;
 import com.noise.chess.domain.Field;
 import com.noise.chess.domain.Figure;
+import com.noise.chess.domain.HistoryEntryDTO;
 import com.noise.chess.domain.Move;
 import com.noise.chess.entity.FieldEntity;
 import com.noise.chess.entity.FigureEntity;
+import com.noise.chess.entity.HistoryEntry;
 import com.noise.chess.repository.FieldRepository;
 import com.noise.chess.repository.FigureRepository;
+import com.noise.chess.repository.HistoryRepository;
+import com.noise.chess.util.CoordinateUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,12 +28,15 @@ public class FieldService {
 
     private final FieldRepository fieldRepository;
     private final FigureRepository figureRepository;
+    private final HistoryRepository historyRepository;
 
     @Autowired
     public FieldService(FieldRepository fieldRepository,
-                        FigureRepository figureRepository) {
+                        FigureRepository figureRepository,
+                        HistoryRepository historyRepository) {
         this.fieldRepository = fieldRepository;
         this.figureRepository = figureRepository;
+        this.historyRepository = historyRepository;
     }
 
     /**
@@ -41,13 +48,13 @@ public class FieldService {
     public Field createField(boolean playWhites, String nickName) {
         Field newField = Field.of(playWhites, nickName);
 
-        FieldEntity createdEntity = fieldRepository.save(toEntity(newField));
+        FieldEntity createdField = fieldRepository.save(toEntity(newField));
 
-        newField.getFigures().stream().map(f -> toEntity(f, createdEntity)).forEach(figureRepository::save);
+        newField.getFigures().stream().map(f -> toEntity(f, createdField)).forEach(figureRepository::save);
 
-        LOG.info("New field created with id " + createdEntity.getId());
+        LOG.info("New field created with id " + createdField.getId());
 
-        return Field.of(createdEntity.getId(), playWhites, nickName, newField.getFigures());
+        return Field.of(createdField.getId(), playWhites, nickName, newField.getFigures(), newField.getHistory());
     }
 
     /**
@@ -88,24 +95,30 @@ public class FieldService {
      */
     public boolean moveFigure(Long figureId, Move move) {
         FigureEntity figure = figureRepository.findOne(figureId);
+        String toCoordinates = move.getCoordinates().toString();
+        String record = move.getMoveType() + ": " + figure + " to " + CoordinateUtil.toChessFormat(toCoordinates);
+        HistoryEntry historyEntry = new HistoryEntry(record, figure.getField());
 
         if (move.isAttack()) {
             Optional<FigureEntity> figureKilled = figure.getField().getFigures().stream()
-                .filter(f -> f.getCoordinates().equals(move.getCoordinates().toString()))
+                .filter(f -> f.getCoordinates().equals(toCoordinates))
                 .findFirst();
 
             if (!figureKilled.isPresent()) {
-                LOG.warn("Cannot kill figure at " + move.getCoordinates() + ". No figures on the way.");
+                LOG.warn("Cannot kill figure at " + toCoordinates + ". No figures on the way.");
             } else {
                 figureRepository.delete(figureKilled.get());
-                LOG.info("Opponent figure killed at {}", move.getCoordinates());
+                LOG.info("Opponent figure killed at {}", toCoordinates);
             }
         }
 
-        figure.setCoordinates(move.getCoordinates().toString());
+        figure.setCoordinates(toCoordinates);
 
         figureRepository.save(figure);
         LOG.info("Figure moved: {}", toFigure(figure));
+
+        HistoryEntry savedEntry = historyRepository.save(historyEntry);
+        LOG.info("History entry saved: {}", savedEntry.getId());
 
         return true;
     }
@@ -116,7 +129,9 @@ public class FieldService {
             entity.isPlayWhites(),
             entity.getPlayerName(),
             entity.getFigures().stream()
-                .map(this::toFigure).collect(Collectors.toSet()));
+                .map(this::toFigure).collect(Collectors.toSet()),
+            entity.getHistory().stream()
+                .map(this::toHistoryDto).collect(Collectors.toList()));
     }
 
     private Figure toFigure(FigureEntity entity) {
@@ -126,6 +141,13 @@ public class FieldService {
             entity.getColor(),
             entity.getFigureType(),
             entity.isOpponent()
+        );
+    }
+
+    private HistoryEntryDTO toHistoryDto(HistoryEntry historyEntry) {
+        return HistoryEntryDTO.of(
+            historyEntry.getId(),
+            historyEntry.getRecord()
         );
     }
 

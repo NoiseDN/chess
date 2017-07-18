@@ -33,8 +33,4 @@ public class Move {
     public MoveType getMoveType() {
         return moveType;
     }
-
-    enum MoveType {
-        MOVE, ATTACK
-    }
 }
