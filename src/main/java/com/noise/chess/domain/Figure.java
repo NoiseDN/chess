@@ -102,6 +102,6 @@ public class Figure {
     }
 
     public String toString() {
-        return (opponent ? "OPPONENT's " : "PLAYER's ") + color + " " + figureType + " at " + CoordinateUtil.toChessFormat(coordinates);
+        return "(" + id + ") " + (opponent ? "OPPONENT's " : "PLAYER's ") + color + " " + figureType + " at " + CoordinateUtil.toChessFormat(coordinates);
     }
 }

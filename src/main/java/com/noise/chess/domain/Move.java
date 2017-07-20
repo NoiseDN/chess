@@ -1,5 +1,7 @@
 package com.noise.chess.domain;
 
+import com.noise.chess.util.CoordinateUtil;
+
 public class Move {
     private final Coordinates coordinates;
     private final MoveType moveType;
@@ -32,5 +34,10 @@ public class Move {
 
     public MoveType getMoveType() {
         return moveType;
+    }
+
+    @Override
+    public String toString() {
+        return CoordinateUtil.toChessFormat(coordinates) + " (" + moveType + ")";
     }
 }

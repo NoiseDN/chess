@@ -1,5 +1,6 @@
 package com.noise.chess.resource;
 
+import com.noise.chess.ai.ArtificialService;
 import com.noise.chess.domain.Figure;
 import com.noise.chess.domain.Move;
 import com.noise.chess.service.FieldService;
@@ -15,18 +16,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 @RestController
 @RequestMapping(value = "api", consumes = "application/json", produces = "application/json")
 public class MoveResource {
 
     private final MoveService moveService;
     private final FieldService fieldService;
+    private final ArtificialService artificialService;
 
     @Autowired
     public MoveResource(MoveService moveService,
-                        FieldService fieldService) {
+                        FieldService fieldService,
+                        ArtificialService artificialService) {
         this.moveService = moveService;
         this.fieldService = fieldService;
+        this.artificialService = artificialService;
     }
 
     @RequestMapping(value = "moves/{fieldId}", method = RequestMethod.POST)
@@ -34,10 +40,14 @@ public class MoveResource {
                                       @RequestBody Figure figure) {
         return moveService.getPossibleMoves(fieldId, figure);
     }
+
     @RequestMapping(value = "move/{figureId}", method = RequestMethod.PUT)
+    @Transactional(value = Transactional.TxType.REQUIRES_NEW)
     public ResponseEntity moveFigure(@PathVariable Long figureId,
                                      @RequestBody Move move) {
         if (fieldService.moveFigure(figureId, move)) {
+            artificialService.makeAiRandomMove(figureId);
+
             return ResponseEntity.ok().build();
         }
 
