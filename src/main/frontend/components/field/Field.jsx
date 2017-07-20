@@ -280,8 +280,7 @@ class Field extends React.Component {
 
                     const figure = this.getFigureAt(cell.coordinates);
 
-                    //TODO: check if selected figure is PLAYER's or OPPONENT's
-                    if (figure) {
+                    if (figure && figure.player) {
                         this.selectedCell = cell;
 
                         const { getPossibleMoves, id } = this.props;
