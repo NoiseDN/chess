@@ -1,0 +1,32 @@
+.game-container {
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+    font-family: 'Verdana', serif;
+
+    .header {
+        display: block;
+        margin-bottom: 7px;
+
+        .button {
+            padding: 4px;
+            border: 1px solid #444;
+            text-decoration: none;
+            color: black;
+            transition: background-color 100ms ease-in;
+
+            &:hover {
+                background-color: #444;
+            }
+        }
+
+        .playerName, .opponent {
+            font-size: 15px;
+            margin-left: 10px;
+        }
+    }
+
+    .game {
+        display: block;
+    }
+}

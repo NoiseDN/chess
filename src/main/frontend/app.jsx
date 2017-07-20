@@ -23,7 +23,7 @@ const ReduxProvider = (props) => {
 
 ReactDOM.render((
     <Router history={browserHistory}>
-        <Route path={'/'} component={ReduxProvider}>
+        <Route path="/" component={ReduxProvider}>
             <IndexRoute component={FrontPage}/>
             <Route path="/game/:id" component={Game}/>
         </Route>

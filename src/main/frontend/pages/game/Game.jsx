@@ -1,7 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router';
 
 import Field from 'components/field/Field';
 import History from 'components/history/History';
+
+import './Game.less';
 
 class Game extends React.Component {
     static propTypes = {
@@ -42,17 +45,24 @@ class Game extends React.Component {
         }
 
         return (
-            <section className="game">
-                <Field
-                    id={field.id}
-                    figures={field.figures}
-                    getPossibleMoves={getPossibleMoves}
-                    moveFigure={this.moveFigure}
-                    moves={moves}
-                    width="480"
-                    height="480"/>
-                <History
-                    history={field.history}/>
+            <section className="game-container">
+                <section className="header">
+                    <Link to="/" className="button">Main menu</Link>
+                    <span className="playerName">Player: {field.playerName} ({field.playWhites ? 'WHITE' : 'BLACK'})</span>
+                    <span className="opponent">Opponent: AI ({field.playWhites ? 'BLACK' : 'WHITE'})</span>
+                </section>
+                <section className="game">
+                    <Field
+                        id={field.id}
+                        figures={field.figures}
+                        getPossibleMoves={getPossibleMoves}
+                        moveFigure={this.moveFigure}
+                        moves={moves}
+                        width="480"
+                        height="480"/>
+                    <History
+                        history={field.history}/>
+                </section>
             </section>
         );
     }
