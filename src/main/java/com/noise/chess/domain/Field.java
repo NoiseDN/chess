@@ -87,65 +87,65 @@ public final class Field {
     }
 
     private Set<Figure> getNewGameFigures(boolean playWhites) {
-        return Stream.concat(getOpponentFigures(playWhites ? Color.BLACK : Color.WHITE).stream(),
-                             getPlayerFigures(playWhites ? Color.WHITE : Color.BLACK).stream())
+        return Stream.concat(getPlayerFigures(playWhites ? Color.WHITE : Color.BLACK).stream(),
+                             getOpponentFigures(playWhites ? Color.BLACK : Color.WHITE).stream())
             .collect(Collectors.toSet());
-    }
-
-    private Set<Figure> getOpponentFigures(Color color) {
-        Set<Figure> figures = new HashSet<>();
-
-        // Rook
-        figures.add(Figure.rook(Coordinates.of(A, One), color, true));
-        figures.add(Figure.rook(Coordinates.of(H, One), color, true));
-
-        // Knight
-        figures.add(Figure.knight(Coordinates.of(B, One), color, true));
-        figures.add(Figure.knight(Coordinates.of(G, One), color, true));
-
-        // Bishop
-        figures.add(Figure.bishop(Coordinates.of(C, One), color, true));
-        figures.add(Figure.bishop(Coordinates.of(F, One), color, true));
-
-        // Pawns
-        for (int i = 0; i < 8; i++) {
-            figures.add(Figure.pawn(Coordinates.of(X.of(i), Two), color, true));
-        }
-
-        // Queen
-        figures.add(Figure.queen(Coordinates.of(D, One), color, true));
-
-        // King
-        figures.add(Figure.king(Coordinates.of(E, One), color, true));
-
-        return figures;
     }
 
     private Set<Figure> getPlayerFigures(Color color) {
         Set<Figure> figures = new HashSet<>();
 
         // Rook
-        figures.add(Figure.rook(Coordinates.of(A, Eight), color, false));
-        figures.add(Figure.rook(Coordinates.of(H, Eight), color, false));
+        figures.add(Figure.rook(Coordinates.of(A, One), color, false));
+        figures.add(Figure.rook(Coordinates.of(H, One), color, false));
 
         // Knight
-        figures.add(Figure.knight(Coordinates.of(B, Eight), color, false));
-        figures.add(Figure.knight(Coordinates.of(G, Eight), color, false));
+        figures.add(Figure.knight(Coordinates.of(B, One), color, false));
+        figures.add(Figure.knight(Coordinates.of(G, One), color, false));
 
         // Bishop
-        figures.add(Figure.bishop(Coordinates.of(C, Eight), color, false));
-        figures.add(Figure.bishop(Coordinates.of(F, Eight), color, false));
+        figures.add(Figure.bishop(Coordinates.of(C, One), color, false));
+        figures.add(Figure.bishop(Coordinates.of(F, One), color, false));
 
         // Pawns
         for (int i = 0; i < 8; i++) {
-            figures.add(Figure.pawn(Coordinates.of(X.of(i), Seven), color, false));
+            figures.add(Figure.pawn(Coordinates.of(X.of(i), Two), color, false));
         }
 
         // Queen
-        figures.add(Figure.queen(Coordinates.of(D, Eight), color, false));
+        figures.add(Figure.queen(Coordinates.of(D, One), color, false));
 
         // King
-        figures.add(Figure.king(Coordinates.of(E, Eight), color, false));
+        figures.add(Figure.king(Coordinates.of(E, One), color, false));
+
+        return figures;
+    }
+
+    private Set<Figure> getOpponentFigures(Color color) {
+        Set<Figure> figures = new HashSet<>();
+
+        // Rook
+        figures.add(Figure.rook(Coordinates.of(A, Eight), color, true));
+        figures.add(Figure.rook(Coordinates.of(H, Eight), color, true));
+
+        // Knight
+        figures.add(Figure.knight(Coordinates.of(B, Eight), color, true));
+        figures.add(Figure.knight(Coordinates.of(G, Eight), color, true));
+
+        // Bishop
+        figures.add(Figure.bishop(Coordinates.of(C, Eight), color, true));
+        figures.add(Figure.bishop(Coordinates.of(F, Eight), color, true));
+
+        // Pawns
+        for (int i = 0; i < 8; i++) {
+            figures.add(Figure.pawn(Coordinates.of(X.of(i), Seven), color, true));
+        }
+
+        // Queen
+        figures.add(Figure.queen(Coordinates.of(D, Eight), color, true));
+
+        // King
+        figures.add(Figure.king(Coordinates.of(E, Eight), color, true));
 
         return figures;
     }

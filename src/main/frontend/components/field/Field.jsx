@@ -50,7 +50,9 @@ class Field extends React.Component {
         const { moves: currentMoves, game: currentGame } = this.props;
 
         if (nextMoves !== currentMoves || nextGame !== currentGame) {
-            this.moves = nextMoves;
+            if (this.selectedCell) {
+                this.moves = nextMoves;
+            }
             this.reRender();
         }
     }
@@ -288,6 +290,7 @@ class Field extends React.Component {
                         const figure = this.getFigureAt(this.selectedCell.coordinates);
 
                         moveFigure && moveFigure(figure.id, moveType, cell.coordinates);
+                        this.moves = null;
                     } else {
                         this.deselectCell();
                     }
