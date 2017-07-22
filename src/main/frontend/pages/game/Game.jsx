@@ -13,7 +13,9 @@ class Game extends React.Component {
         moves: React.PropTypes.array,
         getPossibleMoves: React.PropTypes.func,
         move: React.PropTypes.bool,
-        moveFigure: React.PropTypes.func
+        moveFigure: React.PropTypes.func,
+        game: React.PropTypes.object,
+        fetchGameStatus: React.PropTypes.func
     };
 
     componentWillMount() {
@@ -23,18 +25,22 @@ class Game extends React.Component {
     refresh() {
         const { id } = this.props.params;
         const { fetchField } = this.props;
+        const { fetchGameStatus } = this.props;
 
         fetchField && fetchField(id);
+        fetchGameStatus && fetchGameStatus(id);
     }
 
     moveFigure = (figureId, moveType, coordinates) => {
         const { moveFigure } = this.props;
 
-        moveFigure && moveFigure(figureId, moveType, coordinates).then(() => this.refresh());
+        moveFigure && moveFigure(figureId, moveType, coordinates).then(() => {
+            this.refresh();
+        });
     };
 
     render() {
-        const { field, getPossibleMoves, moves } = this.props;
+        const { field, getPossibleMoves, moves, game } = this.props;
 
         if (!field) {
             return (
@@ -54,6 +60,7 @@ class Game extends React.Component {
                 <section className="game">
                     <Field
                         id={field.id}
+                        game={game}
                         figures={field.figures}
                         getPossibleMoves={getPossibleMoves}
                         moveFigure={this.moveFigure}

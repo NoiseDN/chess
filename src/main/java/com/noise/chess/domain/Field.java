@@ -24,18 +24,21 @@ import static com.noise.chess.domain.Coordinates.Y.Two;
 public final class Field {
 
     private final Long id;
+    private final boolean active;
     private final boolean playWhites;
     private final Set<Figure> figures;
     private final String playerName;
     private final List<HistoryEntryDTO> history;
 
     private Field(Long id,
+                  boolean active,
                   boolean playWhites,
                   String nickName,
                   Set<Figure>
-                  figures,
+                      figures,
                   List<HistoryEntryDTO> history) {
         this.id = id;
+        this.active = active;
         this.playWhites = playWhites;
         this.figures = figures;
         this.playerName = nickName;
@@ -44,14 +47,15 @@ public final class Field {
 
     private Field(Long id, boolean playWhites, String nickName) {
         this.id = id;
+        this.active = true;
         this.playWhites = playWhites;
         this.figures = getNewGameFigures(playWhites);
         this.playerName = nickName;
         this.history = new ArrayList<>();
     }
 
-    public static Field of(Long id, boolean playWhites, String nickName, Set<Figure> figures, List<HistoryEntryDTO> history) {
-        return new Field(id, playWhites, nickName, figures, history);
+    public static Field of(Long id, boolean active, boolean playWhites, String nickName, Set<Figure> figures, List<HistoryEntryDTO> history) {
+        return new Field(id, active, playWhites, nickName, figures, history);
     }
 
     public static Field of(boolean playWhites, String nickName) {
@@ -60,6 +64,10 @@ public final class Field {
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public boolean isPlayWhites() {

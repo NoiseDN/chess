@@ -38,6 +38,10 @@ class FrontPage extends React.Component {
     };
 
     toSavedGame = (field, index) => {
+        if (field.game && field.game.over) {
+            return false;
+        }
+
         return (
             <Link key={index} to={`/game/${field.id}`} className="saved-game">
                 { field.playerName }

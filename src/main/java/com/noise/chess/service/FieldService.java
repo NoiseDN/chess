@@ -1,8 +1,11 @@
 package com.noise.chess.service;
 
+import com.noise.chess.domain.Color;
 import com.noise.chess.domain.Coordinates;
 import com.noise.chess.domain.Field;
 import com.noise.chess.domain.Figure;
+import com.noise.chess.domain.FigureType;
+import com.noise.chess.domain.GameStatus;
 import com.noise.chess.domain.HistoryEntryDTO;
 import com.noise.chess.domain.Move;
 import com.noise.chess.entity.FieldEntity;
@@ -21,6 +24,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 @Service
 public class FieldService {
@@ -54,7 +59,7 @@ public class FieldService {
 
         LOG.info("New field created with id " + createdField.getId());
 
-        return Field.of(createdField.getId(), playWhites, nickName, newField.getFigures(), newField.getHistory());
+        return Field.of(createdField.getId(), createdField.isActive(), playWhites, nickName, newField.getFigures(), newField.getHistory());
     }
 
     /**
@@ -76,6 +81,19 @@ public class FieldService {
     }
 
     /**
+     * Gets field for a figure
+     *
+     * @param figureId
+     * @return
+     */
+    public Field getFieldByFigureId(Long figureId) {
+        FigureEntity figure = figureRepository.findOne(figureId);
+        FieldEntity field = figure.getField();
+
+        return toField(fieldRepository.findOne(field.getId()));
+    }
+
+    /**
      * Get all stored fields
      *
      * @return List of Field objects
@@ -93,8 +111,10 @@ public class FieldService {
      * @param move
      * @return
      */
+    @Transactional
     public boolean moveFigure(Long figureId, Move move) {
         FigureEntity figure = figureRepository.findOne(figureId);
+        String figureState = figure.toString();
         String toCoordinates = move.getCoordinates().toString();
         String record = move.getMoveType() + ": " + figure + " to " + CoordinateUtil.toChessFormat(toCoordinates);
         HistoryEntry historyEntry = new HistoryEntry(record, figure.getField());
@@ -108,14 +128,14 @@ public class FieldService {
                 LOG.warn("Cannot kill figure at " + toCoordinates + ". No figures on the way.");
             } else {
                 figureRepository.delete(figureKilled.get());
-                LOG.info("Opponent figure killed at {}", toCoordinates);
+                LOG.info("Opponent figure killed at {}", CoordinateUtil.toChessFormat(toCoordinates));
             }
         }
 
         figure.setCoordinates(toCoordinates);
 
         figureRepository.save(figure);
-        LOG.info("Figure moved: {}", toFigure(figure));
+        LOG.info("Figure moved: {} to {}", figureState, move);
 
         HistoryEntry savedEntry = historyRepository.save(historyEntry);
         LOG.info("History entry saved: {}", savedEntry.getId());
@@ -123,9 +143,48 @@ public class FieldService {
         return true;
     }
 
+    /**
+     * Returns status for a game on a field
+     *
+     * @param fieldId
+     * @return
+     */
+    public GameStatus getGameStatus(Long fieldId) {
+        Field field = getField(fieldId).orElseThrow(() -> new RuntimeException("Could not find field for id " + fieldId));
+        List<Figure> kings = field.getFigures().stream()
+            .filter(f -> f.getFigureType().equals(FigureType.King))
+            .collect(Collectors.toList());
+
+        if (kings.size() < 2) {
+            boolean whiteWins = kings.get(0).getColor().equals(Color.WHITE);
+
+            return whiteWins ? GameStatus.WHITE_WINS : GameStatus.BLACK_WINS;
+        }
+
+        return GameStatus.NOT_FINISHED;
+    }
+
+    /**
+     * Deactivates a field once someone has won
+     *
+     * @param fieldId
+     */
+    public void deactivate(Long fieldId) {
+        FieldEntity field = fieldRepository.findOne(fieldId);
+
+        field.setActive(false);
+
+        fieldRepository.save(field);
+
+        historyRepository.save(new HistoryEntry("Game Over", field));
+
+        LOG.info("Field " + fieldId + " has been deactivated");
+    }
+
     private Field toField(FieldEntity entity) {
         return Field.of(
             entity.getId(),
+            entity.isActive(),
             entity.isPlayWhites(),
             entity.getPlayerName(),
             entity.getFigures().stream()
@@ -158,7 +217,7 @@ public class FieldService {
     }
 
     private FieldEntity toEntity(Field dto) {
-        return new FieldEntity(dto.isPlayWhites(), dto.getPlayerName());
+        return new FieldEntity(dto.isActive(), dto.isPlayWhites(), dto.getPlayerName());
     }
 
     private FigureEntity toEntity(Figure figure, FieldEntity field) {

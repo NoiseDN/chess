@@ -2,6 +2,7 @@ package com.noise.chess.resource;
 
 import com.noise.chess.domain.CreateFieldDTO;
 import com.noise.chess.domain.Field;
+import com.noise.chess.domain.GameStatus;
 import com.noise.chess.service.FieldService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,10 @@ public class FieldResource {
         return fieldService.getField(id)
             .<ResponseEntity>map(ResponseEntity::ok)
             .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+    }
+
+    @RequestMapping(value = "field/{id}/status", method = RequestMethod.GET)
+    public GameStatus getFieldStatus(@PathVariable Long id) {
+        return fieldService.getGameStatus(id);
     }
 }

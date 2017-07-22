@@ -28,6 +28,7 @@ class Cell {
 class Field extends React.Component {
     static propTypes = {
         id: React.PropTypes.number.isRequired,
+        game: React.PropTypes.object,
         figures: React.PropTypes.array.isRequired,
         getPossibleMoves: React.PropTypes.func.isRequired,
         moveFigure: React.PropTypes.func.isRequired,
@@ -45,10 +46,10 @@ class Field extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { moves: nextMoves } = nextProps;
-        const { moves: currentMoves } = this.props;
+        const { moves: nextMoves, game: nextGame } = nextProps;
+        const { moves: currentMoves, game: currentGame } = this.props;
 
-        if (nextMoves !== currentMoves) {
+        if (nextMoves !== currentMoves || nextGame !== currentGame) {
             this.moves = nextMoves;
             this.reRender();
         }
@@ -81,6 +82,7 @@ class Field extends React.Component {
 
     drawCanvas() {
         const { field } = this.refs;
+        const { game } = this.props;
 
         const ctx = field.getContext('2d');
 
@@ -155,6 +157,16 @@ class Field extends React.Component {
                 }
             }
         }
+
+        if (game && game.over) {
+            ctx.fillStyle = 'rgba(90, 90, 90, 0.5)';
+            ctx.fillRect(0, 0, field.width, field.height);
+
+            ctx.fillStyle = 'black';
+            ctx.font = '30px Verdana';
+            ctx.fillText('GAME OVER!', field.width / 2 - 90, field.height / 2 + 20);
+            ctx.fillText(`${game.winner} WINS`, field.width / 2 - 100, field.height / 2 + 70);
+        }
     }
 
     getFigureAt(cellCoordinates) {
@@ -194,9 +206,9 @@ class Field extends React.Component {
     }
 
     drawFigures = () => {
-        const { figures } = this.props;
+        const { figures, game } = this.props;
 
-        if (!figures) {
+        if (!figures || game && game.over) {
             return false;
         }
 
@@ -254,6 +266,11 @@ class Field extends React.Component {
         const clickedX = e.pageX - e.target.offsetLeft;
         const clickedY = e.pageY - e.target.offsetTop;
         const { cells } = this;
+        const { game } = this.props;
+
+        if (game && game.over) {
+            return false;
+        }
 
         cells.map(cell => {
             if (clickedX < cell.right && clickedX > cell.left && clickedY > cell.top && clickedY < cell.bottom) {

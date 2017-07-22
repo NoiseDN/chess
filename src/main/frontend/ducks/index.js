@@ -4,10 +4,12 @@ import field from 'ducks/field';
 import fields from 'ducks/fields';
 import moves from 'ducks/moves';
 import move from 'ducks/move';
+import game from 'ducks/game';
 
 export default combineReducers({
     field,
     fields,
     moves,
-    move
+    move,
+    game
 });

@@ -23,6 +23,9 @@ public class FieldEntity implements Serializable {
     private Long id;
 
     @Column(nullable = false)
+    private boolean active;
+
+    @Column(nullable = false)
     private boolean playWhites;
 
     @Column(nullable = false)
@@ -36,15 +39,21 @@ public class FieldEntity implements Serializable {
 
     protected FieldEntity() {}
 
-    public FieldEntity(boolean playWhites,
+    public FieldEntity(boolean active,
+                       boolean playWhites,
                        String playerName) {
         super();
+        this.active = active;
         this.playWhites = playWhites;
         this.playerName = playerName;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public boolean isPlayWhites() {
@@ -61,6 +70,10 @@ public class FieldEntity implements Serializable {
 
     public List<HistoryEntry> getHistory() {
         return history;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public void setHistory(List<HistoryEntry> history) {

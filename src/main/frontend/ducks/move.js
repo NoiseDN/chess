@@ -1,6 +1,6 @@
 import { MOVE } from './ActionTypes';
 
-export default function moves(state = null, action) {
+export default function move(state = null, action) {
     const { type } = action;
 
     switch (type) {
