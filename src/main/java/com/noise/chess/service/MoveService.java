@@ -1,5 +1,6 @@
 package com.noise.chess.service;
 
+import com.noise.chess.domain.Color;
 import com.noise.chess.domain.Coordinates;
 import com.noise.chess.domain.Field;
 import com.noise.chess.domain.Figure;
@@ -67,27 +68,25 @@ public class MoveService {
         int x = figure.getCoordinates().getX().ordinal();
         int y = figure.getCoordinates().getY().ordinal();
 
-        switch (figure.getColor()) {
-            case WHITE:
-                possibleDirections.add(Direction.Down);
-                possibleDirections.add(Direction.DownRight);
-                possibleDirections.add(Direction.DownLeft);
-                add(pawnMoves, of(X.of(x),     Y.of(y - 1)), field, figure, Direction.Down);
-                add(pawnMoves, of(X.of(x),     Y.of(y - 2)), field, figure, Direction.Down);
-                add(pawnMoves, of(X.of(x + 1), Y.of(y - 1)), field, figure, Direction.DownRight);
-                add(pawnMoves, of(X.of(x - 1), Y.of(y - 1)), field, figure, Direction.DownLeft);
-                break;
-            case BLACK:
-                possibleDirections.add(Direction.Up);
-                possibleDirections.add(Direction.UpRight);
-                possibleDirections.add(Direction.UpLeft);
-                add(pawnMoves, of(X.of(x),     Y.of(y + 1)), field, figure, Direction.Up);
-                add(pawnMoves, of(X.of(x),     Y.of(y + 2)), field, figure, Direction.Up);
-                add(pawnMoves, of(X.of(x + 1), Y.of(y + 1)), field, figure, Direction.UpRight);
-                add(pawnMoves, of(X.of(x - 1), Y.of(y + 1)), field, figure, Direction.UpLeft);
-                break;
-            default:
-                throw new RuntimeException("Unknown color " + figure.getColor());
+        boolean goingUp = field.isPlayWhites() && figure.getColor().equals(Color.WHITE) ||
+                          !field.isPlayWhites() && figure.getColor().equals(Color.BLACK);
+
+        if (goingUp) {
+            possibleDirections.add(Direction.Up);
+            possibleDirections.add(Direction.UpRight);
+            possibleDirections.add(Direction.UpLeft);
+            add(pawnMoves, of(X.of(x),     Y.of(y - 1)), field, figure, Direction.Up);
+            add(pawnMoves, of(X.of(x),     Y.of(y - 2)), field, figure, Direction.Up);
+            add(pawnMoves, of(X.of(x + 1), Y.of(y - 1)), field, figure, Direction.UpRight);
+            add(pawnMoves, of(X.of(x - 1), Y.of(y - 1)), field, figure, Direction.UpLeft);
+        } else {
+            possibleDirections.add(Direction.Down);
+            possibleDirections.add(Direction.DownRight);
+            possibleDirections.add(Direction.DownLeft);
+            add(pawnMoves, of(X.of(x),     Y.of(y + 1)), field, figure, Direction.Down);
+            add(pawnMoves, of(X.of(x),     Y.of(y + 2)), field, figure, Direction.Down);
+            add(pawnMoves, of(X.of(x + 1), Y.of(y + 1)), field, figure, Direction.DownRight);
+            add(pawnMoves, of(X.of(x - 1), Y.of(y + 1)), field, figure, Direction.DownLeft);
         }
 
         return pawnMoves;

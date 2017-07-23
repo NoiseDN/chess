@@ -12,5 +12,6 @@ module.exports = {
     FIELDS : createSymbols('Fields'),
     MOVES : createSymbols('Moves'),
     MOVE : createSymbols('Move'),
-    GAME : createSymbols('Game')
+    GAME : createSymbols('Game'),
+    AI : createSymbols('AI')
 };

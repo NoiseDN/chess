@@ -12,8 +12,9 @@ class History extends React.Component {
     componentWillReceiveProps() {
         window.setTimeout(() => {
             const entryNodes = document.getElementsByClassName('history-entry');
+            const lastNode = entryNodes[entryNodes.length - 1];
 
-            entryNodes[entryNodes.length - 1].classList.remove('new');
+            lastNode && lastNode.classList.remove('new');
         }, 1000);
     }
 

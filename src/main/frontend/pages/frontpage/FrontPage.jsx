@@ -1,11 +1,12 @@
 import React from 'react';
-import { Link, browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 
 import './FrontPage.less';
 
 class FrontPage extends React.Component {
     state = {
-        playerName: 'Player'
+        playerName: 'Player',
+        color: 'WHITE'
     };
 
     componentWillMount() {
@@ -18,7 +19,7 @@ class FrontPage extends React.Component {
         const { field } = nextProps;
 
         if (field && field.id) {
-            browserHistory.push(`/game/${field.id}`);
+            window.setTimeout(() => browserHistory.push(`/game/${field.id}`), 200);
         }
     }
 
@@ -30,11 +31,33 @@ class FrontPage extends React.Component {
         });
     };
 
-    startNewGame = () => {
-        const { createField } = this.props;
-        const { playerName } = this.state;
+    handleFocus = (e) => {
+        e && e.preventDefault();
 
-        createField && createField(true, playerName);
+        e.target.select();
+    };
+
+    handleColorChange = (e) => {
+        this.setState({
+            color: e.target.value
+        });
+    };
+
+    startNewGame = () => {
+        const { createField, makeAiMove } = this.props;
+        const { playerName, color } = this.state;
+
+        createField && createField(color === 'WHITE', playerName).then(field => {
+            if (!field.playWhites) {
+                makeAiMove && makeAiMove(field.id);
+            }
+        });
+    };
+
+    goTo = (e, url) => {
+        e && e.preventDefault();
+
+        browserHistory.push(url);
     };
 
     toSavedGame = (field, index) => {
@@ -42,16 +65,18 @@ class FrontPage extends React.Component {
             return false;
         }
 
+        const buttonText = `${field.playerName} (${field.playWhites ? 'WHITE' : 'BLACK'}) vs AI (${field.playWhites ? 'BLACK' : 'WHITE'})`;
+
         return (
-            <Link key={index} to={`/game/${field.id}`} className="saved-game">
-                { field.playerName }
-            </Link>
+            <button key={index} onClick={(e) => this.goTo(e, `/game/${field.id}`)} className="saved-game">
+                { buttonText }
+            </button>
         );
     };
 
     render() {
         const { fields } = this.props;
-        const { playerName } = this.state;
+        const { playerName, color } = this.state;
 
         return (
             <section className="front">
@@ -60,30 +85,45 @@ class FrontPage extends React.Component {
                     by Anton Filimonov
                 </p>
 
-                <section className="new-game">
-                    <h3>Start a new game</h3>
-                    <label htmlFor="nick-name">Name</label>
+                <fieldset className="new-game">
+                    <legend><h3>Start a new game</h3></legend>
+                    <label htmlFor="player-name">Name</label>
                     <input
                         type="text"
                         id="player-name"
                         className="player-name"
                         value={playerName}
+                        onFocus={this.handleFocus}
                         onChange={this.handlePlayerNameChange} />
-
+                    <label htmlFor="white">White</label>
+                    <input
+                        type="radio"
+                        name="color"
+                        id="white"
+                        value="WHITE"
+                        checked={color === 'WHITE'}
+                        onChange={this.handleColorChange}/>
+                    <label htmlFor="black">Black</label>
+                    <input
+                        type="radio"
+                        name="color"
+                        id="black"
+                        value="BLACK"
+                        checked={color === 'BLACK'}
+                        onChange={this.handleColorChange}/>
                     <button
                         className="start-game"
                         onClick={this.startNewGame}>
                         Start New Game
                     </button>
-                </section>
+                </fieldset>
 
                 { fields && fields.length > 0 &&
-                    <section className="load-game">
-                        <h3>Load saved game</h3>
+                    <fieldset className="load-game">
+                        <legend><h3>Load saved game</h3></legend>
                         { fields.map(this.toSavedGame) }
-                    </section>
+                    </fieldset>
                 }
-
             </section>
         );
     }
