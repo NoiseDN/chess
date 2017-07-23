@@ -18,4 +18,8 @@ public enum FigureType {
     public String toString() {
         return text;
     }
+
+    public static boolean isKing(FigureType figureType) {
+        return figureType.equals(King);
+    }
 }

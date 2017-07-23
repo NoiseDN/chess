@@ -213,12 +213,18 @@ public class MoveService {
         boolean thereAreOpponentFiguresOnTheWay = field.getFigures().stream()
             .filter(f -> !f.getColor().equals(figure.getColor()))
             .anyMatch(f -> f.getCoordinates().getX() == x && f.getCoordinates().getY() == y);
+        boolean figureOnTheWayIsNotAKing = field.getFigures().stream()
+            .filter(f -> f.getCoordinates().getX() == x && f.getCoordinates().getY() == y)
+            .map(Figure::getFigureType)
+            .noneMatch(FigureType::isKing);
+        boolean canAttack = thereAreOpponentFiguresOnTheWay && figureOnTheWayIsNotAKing;
+        boolean canMove = !thereArePlayerFiguresOnTheWay && figureOnTheWayIsNotAKing;
 
         // Knights can jump
         if (figure.getFigureType() == FigureType.Knight) {
-            if (thereAreOpponentFiguresOnTheWay) {
+            if (canAttack) {
                 return moves.add(Move.attack(coordinates));
-            } else if (!thereArePlayerFiguresOnTheWay) {
+            } else if (canMove) {
                 return moves.add(Move.move(coordinates));
             }
         }
@@ -227,7 +233,7 @@ public class MoveService {
         if (figure.getFigureType() == FigureType.Pawn) {
             if (direction.isDiagonal()) {
                 possibleDirections.remove(direction);
-                if (thereAreOpponentFiguresOnTheWay) {
+                if (canAttack) {
                     return moves.add(Move.attack(coordinates));
                 }
             } else if (thereAreOpponentFiguresOnTheWay) {
@@ -235,17 +241,18 @@ public class MoveService {
             }
         }
 
-        if (thereArePlayerFiguresOnTheWay) {
+        if (thereArePlayerFiguresOnTheWay || !figureOnTheWayIsNotAKing) {
             return possibleDirections.remove(direction);
         }
 
         if (possibleDirections.contains(direction)) {
-            if (thereAreOpponentFiguresOnTheWay) {
+            if (canAttack) {
                 possibleDirections.remove(direction);
                 return moves.add(Move.attack(coordinates));
             }
-
-            return moves.add(Move.move(coordinates));
+            if (canMove) {
+                return moves.add(Move.move(coordinates));
+            }
         }
 
         return false;
