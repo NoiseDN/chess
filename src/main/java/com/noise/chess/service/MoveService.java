@@ -250,9 +250,8 @@ public class MoveService {
                 possibleDirections.remove(direction);
                 return moves.add(Move.attack(coordinates));
             }
-            if (canMove) {
-                return moves.add(Move.move(coordinates));
-            }
+
+            return moves.add(Move.move(coordinates));
         }
 
         return false;
@@ -270,7 +269,7 @@ public class MoveService {
         }
 
         static List<Direction> cross() {
-            return Arrays.asList(Up, Right, Left, Right);
+            return Arrays.asList(Up, Down, Left, Right);
         }
 
         public boolean isDiagonal() {
