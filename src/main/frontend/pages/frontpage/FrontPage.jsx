@@ -65,7 +65,7 @@ class FrontPage extends React.Component {
             return false;
         }
 
-        const buttonText = `${field.playerName} (${field.playWhites ? 'WHITE' : 'BLACK'}) vs AI (${field.playWhites ? 'BLACK' : 'WHITE'})`;
+        const buttonText = `${field.playerName} ${field.playWhites ? '♙' : '♟'} vs AI ${field.playWhites ? '♟' : '♙'}`;
 
         return (
             <button key={index} onClick={(e) => this.goTo(e, `/game/${field.id}`)} className="saved-game">
@@ -95,7 +95,7 @@ class FrontPage extends React.Component {
                         value={playerName}
                         onFocus={this.handleFocus}
                         onChange={this.handlePlayerNameChange} />
-                    <label htmlFor="white">White</label>
+                    <label htmlFor="white" className="pawn">♙</label>
                     <input
                         type="radio"
                         name="color"
@@ -103,7 +103,7 @@ class FrontPage extends React.Component {
                         value="WHITE"
                         checked={color === 'WHITE'}
                         onChange={this.handleColorChange}/>
-                    <label htmlFor="black">Black</label>
+                    <label htmlFor="black" className="pawn">♟</label>
                     <input
                         type="radio"
                         name="color"
