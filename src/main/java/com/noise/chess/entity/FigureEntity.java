@@ -2,7 +2,7 @@ package com.noise.chess.entity;
 
 import com.noise.chess.domain.Color;
 import com.noise.chess.domain.FigureType;
-import com.noise.chess.util.CoordinateUtil;
+import com.noise.chess.util.FigureToString;
 
 import java.io.Serializable;
 
@@ -19,7 +19,7 @@ import javax.persistence.Table;
 
 @Entity(name = "figure")
 @Table
-public class FigureEntity implements Serializable {
+public class FigureEntity implements Serializable, Coloured {
     private static final long serialVersionUID = 2L;
 
     @Id
@@ -87,6 +87,6 @@ public class FigureEntity implements Serializable {
 
     @Override
     public String toString() {
-        return "(" + id + ") " + (opponent ? "OPPONENT's " : "PLAYER's ") + color + " " + figureType + " at " + CoordinateUtil.toChessFormat(coordinates);
+        return FigureToString.of(this);
     }
 }

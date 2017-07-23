@@ -122,8 +122,7 @@ public class FieldService {
 
         String figureState = figure.toString();
         String toCoordinates = move.getCoordinates().toString();
-        String record = move.getMoveType() + ": " + figure + " to " + CoordinateUtil.toChessFormat(toCoordinates);
-        HistoryEntry historyEntry = new HistoryEntry(record, figure.getField());
+        String record = figure + " : " + CoordinateUtil.toChessFormat(toCoordinates);
 
         if (move.isAttack()) {
             Optional<FigureEntity> figureKilled = figure.getField().getFigures().stream()
@@ -133,18 +132,19 @@ public class FieldService {
             if (!figureKilled.isPresent()) {
                 LOG.warn("Cannot kill figure at " + toCoordinates + ". No figures on the way.");
             } else {
+                record += " (" + figureKilled.get() + " killed)";
                 figureRepository.delete(figureKilled.get());
                 LOG.info("Opponent figure killed at {}", CoordinateUtil.toChessFormat(toCoordinates));
             }
         }
 
+        HistoryEntry historyEntry = new HistoryEntry(record, figure.getField());
         figure.setCoordinates(toCoordinates);
 
         figureRepository.save(figure);
         LOG.info("Figure moved: {} to {}", figureState, move);
 
-        HistoryEntry savedEntry = historyRepository.save(historyEntry);
-        LOG.info("History entry saved: {}", savedEntry.getId());
+        historyRepository.save(historyEntry);
 
         return true;
     }

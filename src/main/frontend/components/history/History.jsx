@@ -12,7 +12,7 @@ class History extends React.Component {
 
         return (
             <div key={index} className="history-entry">
-                { record }
+                { index + 1 }: { record }
             </div>
         );
     }

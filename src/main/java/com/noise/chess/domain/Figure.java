@@ -1,8 +1,9 @@
 package com.noise.chess.domain;
 
-import com.noise.chess.util.CoordinateUtil;
+import com.noise.chess.entity.Coloured;
+import com.noise.chess.util.FigureToString;
 
-public class Figure {
+public class Figure implements Coloured {
     private final Long id;
     private final Color color;
     private final FigureType figureType;
@@ -102,6 +103,6 @@ public class Figure {
     }
 
     public String toString() {
-        return "(" + id + ") " + (opponent ? "OPPONENT's " : "PLAYER's ") + color + " " + figureType + " at " + CoordinateUtil.toChessFormat(coordinates);
+        return FigureToString.of(this);
     }
 }
