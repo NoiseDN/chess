@@ -3,7 +3,6 @@ package com.noise.chess.resource;
 import com.noise.chess.ai.ArtificialService;
 import com.noise.chess.domain.Field;
 import com.noise.chess.domain.Figure;
-import com.noise.chess.domain.GameStatus;
 import com.noise.chess.domain.Move;
 import com.noise.chess.service.FieldService;
 import com.noise.chess.service.MoveService;
@@ -48,7 +47,7 @@ public class MoveResource {
                                                  @RequestBody Move move) {
         fieldService.moveFigure(figureId, move);
         Field field = fieldService.getFieldByFigureId(figureId);
-        artificialService.makeAiRandomMove(field);
+        artificialService.makeAiMove(field);
 
         return ResponseEntity.ok().build();
     }

@@ -114,6 +114,12 @@ public class FieldService {
     @Transactional
     public boolean moveFigure(Long figureId, Move move) {
         FigureEntity figure = figureRepository.findOne(figureId);
+
+        if (figure == null) {
+            LOG.error("Figure not found! ID: " + figureId);
+            return false;
+        }
+
         String figureState = figure.toString();
         String toCoordinates = move.getCoordinates().toString();
         String record = move.getMoveType() + ": " + figure + " to " + CoordinateUtil.toChessFormat(toCoordinates);
