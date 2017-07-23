@@ -9,10 +9,17 @@
     .history-entry {
         font-size: 12px;
         font-family: Verdana, monospace;
+        background-color: white;
+        transition: background-color 200ms ease-in;
+
+        &.new {
+            background-color: rgba(163, 233, 255, 0.5);
+        }
 
         .timestamp {
             color: darkgrey;
         }
+        
         .move {
             display: inline-block;
             margin-left: 5px;

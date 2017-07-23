@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import classnames from 'classnames';
 
 import './History.less';
 
@@ -8,12 +9,20 @@ class History extends React.Component {
         history: React.PropTypes.array.isRequired
     };
 
-    toEntry(entry, index) {
+    componentWillReceiveProps() {
+        window.setTimeout(() => {
+            const entryNodes = document.getElementsByClassName('history-entry');
+
+            entryNodes[entryNodes.length - 1].classList.remove('new');
+        }, 1000);
+    }
+
+    toEntry(entry, index, size) {
         const { record, timestamp } = entry;
         const time = moment(timestamp).format('HH:mm:ss');
 
         return (
-            <div key={index} className="history-entry">
+            <div key={index} id={'history' + index} className={classnames('history-entry', { 'new': index === size - 1 })}>
                 <span className="timestamp">[{ time }]:</span>
                 <span className="move">{ record }</span>
             </div>
@@ -29,7 +38,7 @@ class History extends React.Component {
         
         return (
             <section className="history-container">
-                { history.map(this.toEntry) }
+                { history.map((e, i) => this.toEntry(e, i, history.length)) }
             </section>
         );
     }
