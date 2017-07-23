@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 import './History.less';
 
@@ -8,11 +9,13 @@ class History extends React.Component {
     };
 
     toEntry(entry, index) {
-        const { record } = entry;
+        const { record, timestamp } = entry;
+        const time = moment(timestamp).format('HH:mm:ss');
 
         return (
             <div key={index} className="history-entry">
-                { index + 1 }: { record }
+                <span className="timestamp">[{ time }]:</span>
+                <span className="move">{ record }</span>
             </div>
         );
     }

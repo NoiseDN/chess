@@ -1,6 +1,8 @@
 package com.noise.chess.entity;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,12 +30,16 @@ public class HistoryEntry implements Serializable {
     @JoinColumn(name = "FIELD_ID")
     private FieldEntity field;
 
+    @Column(nullable = false)
+    private String timestamp;
+
     protected HistoryEntry() {}
 
     public HistoryEntry(String record,
                         FieldEntity field) {
         this.record = record;
         this.field = field;
+        this.timestamp = LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
     }
 
     public Long getId() {
@@ -46,5 +52,9 @@ public class HistoryEntry implements Serializable {
 
     public FieldEntity getField() {
         return field;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
     }
 }

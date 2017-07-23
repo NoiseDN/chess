@@ -120,7 +120,6 @@ public class FieldService {
             return false;
         }
 
-        String figureState = figure.toString();
         String toCoordinates = move.getCoordinates().toString();
         String record = figure + " : " + CoordinateUtil.toChessFormat(toCoordinates);
 
@@ -134,17 +133,14 @@ public class FieldService {
             } else {
                 record += " (" + figureKilled.get() + " killed)";
                 figureRepository.delete(figureKilled.get());
-                LOG.info("Opponent figure killed at {}", CoordinateUtil.toChessFormat(toCoordinates));
             }
         }
 
-        HistoryEntry historyEntry = new HistoryEntry(record, figure.getField());
         figure.setCoordinates(toCoordinates);
-
         figureRepository.save(figure);
-        LOG.info("Figure moved: {} to {}", figureState, move);
+        LOG.info(record);
 
-        historyRepository.save(historyEntry);
+        historyRepository.save(new HistoryEntry(record, figure.getField()));
 
         return true;
     }
@@ -212,7 +208,8 @@ public class FieldService {
     private HistoryEntryDTO toHistoryDto(HistoryEntry historyEntry) {
         return HistoryEntryDTO.of(
             historyEntry.getId(),
-            historyEntry.getRecord()
+            historyEntry.getRecord(),
+            historyEntry.getTimestamp()
         );
     }
 
